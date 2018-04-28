@@ -16,8 +16,22 @@ public class GamePlay {
 	private static final int WASABI = 6;
 	private static final int CHOPSTICKS = 4;
 	
+	private static final int NUM_TWO_PLAYER_CARDS = 10;
+	
 	private ArrayList<String> deck = new ArrayList<String>();
 	private ArrayList<Player> players = new ArrayList<Player>();
+	
+	
+	private ArrayList<String> getCardHand (int numCards) {
+		Random rand = new Random();
+		ArrayList<String> currHand = new ArrayList<String>();
+		for (int i = 0; i < numCards; i++) {
+			int deckInd = rand.nextInt(deck.size());
+			String currCard = deck.remove(deckInd);
+			currHand.add(currCard);
+		}
+		return currHand;
+	}
 	
 	public void main() {
 		for (int i = 0; i < TEMPURA; i++)
@@ -52,6 +66,8 @@ public class GamePlay {
 		
 		players.add(player1);
 		players.add(player2);
+		player1.updateHand(getCardHand(NUM_TWO_PLAYER_CARDS));
+		player2.updateHand(getCardHand(NUM_TWO_PLAYER_CARDS));
 		
 	}
 }

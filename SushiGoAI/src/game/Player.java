@@ -5,11 +5,13 @@ import java.util.*;
 public class Player {
 	
 	private ArrayList<String> cards;
+	private ArrayList<String> hand;
 	private int totalPoints;
 	private int numPuddings;
 	
 	public Player() {
 		cards = new ArrayList<String>();
+		hand = new ArrayList<String>();
 		totalPoints = 0;
 		numPuddings = 0;
 	}
@@ -36,5 +38,9 @@ public class Player {
 	
 	public int getNumPuddings() {
 		return numPuddings;
+	}
+	
+	public void updateHand(ArrayList<String> updatedHand) {
+		hand = updatedHand;
 	}
  }
