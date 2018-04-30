@@ -43,4 +43,8 @@ public class Player {
 	public void updateHand(ArrayList<String> updatedHand) {
 		hand = updatedHand;
 	}
+	
+	public ArrayList<String> getHand() {
+		return hand;
+	}
  }

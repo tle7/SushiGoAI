@@ -23,13 +23,18 @@ public class GamePlay {
 	
 	
 	public static void main(String[] args) {
-		System.out.println("INSIDE MAIN METHOD");
 		initializeConstants();
-		
 		//Eventually, need to add a console prompt asking the user how many players are playing.
 		initializePlayers(2);
-
 		
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("Welcome to SushiGoAI! \n Here is your hand: ");
+		for (String s : players.get(0).getHand()) {
+			System.out.println(s);
+		}
+		System.out.println("Choose a card to keep by typing its name here: ");
+		String cardToKeep = scanner.nextLine().toLowerCase();
+		System.out.println("You have chosen to keep the following card: " + cardToKeep);
 		
 		
 	}
