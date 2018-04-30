@@ -24,6 +24,17 @@ public class GamePlay {
 	
 	public static void main(String[] args) {
 		System.out.println("INSIDE MAIN METHOD");
+		initializeConstants();
+		
+		//Eventually, need to add a console prompt asking the user how many players are playing.
+		initializePlayers(2);
+
+		
+		
+		
+	}
+	
+	private static void initializeConstants() {
 		for (int i = 0; i < TEMPURA; i++)
 			deck.add("Tempura");
 		for (int i = 0; i < SASHIMI; i++)
@@ -48,8 +59,9 @@ public class GamePlay {
 			deck.add("Wasabi");
 		for (int i = 0; i < CHOPSTICKS; i++)
 			deck.add("Chopsticks");
-		
-		
+	}
+	
+	private static void initializePlayers(int numPlayers) {
 		/*For simple version, we will assume 2 players*/
 		Player player1 = new Player();
 		Player player2 = new Player();
