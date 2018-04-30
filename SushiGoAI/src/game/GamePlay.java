@@ -88,5 +88,15 @@ public class GamePlay {
 		}
 		return currHand;
 	}
+	
+	private static void countScoreInHand(ArrayList<String> currHand, Player currPlayer) {
+		int currScore = 0;
+		int numWasabi = 0;
+		int numTempura = 0;
+		int numSashimi = 0;
+		for (String card: currHand) {
+			
+		}
+	}
 }
 
