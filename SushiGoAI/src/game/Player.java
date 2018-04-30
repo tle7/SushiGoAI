@@ -4,24 +4,24 @@ import java.util.*;
 
 public class Player {
 	
-	private ArrayList<String> cards;
-	private ArrayList<String> hand;
+	private ArrayList<String> selectedCards;
+	private ArrayList<String> cardsInHand;
 	private int totalPoints;
 	private int numPuddings;
 	
 	public Player() {
-		cards = new ArrayList<String>();
-		hand = new ArrayList<String>();
+		selectedCards = new ArrayList<String>();
+		cardsInHand = new ArrayList<String>();
 		totalPoints = 0;
 		numPuddings = 0;
 	}
 	
 	public void updateCards(String newCard) {
-		cards.add(newCard);
+		selectedCards.add(newCard);
 	}
 	
 	public ArrayList<String> getCards() {
-		return cards;
+		return selectedCards;
 	}
 	
 	public void updateTotalPoints(int pointsToAdd) {
@@ -41,6 +41,6 @@ public class Player {
 	}
 	
 	public void updateHand(ArrayList<String> updatedHand) {
-		hand = updatedHand;
+		cardsInHand = updatedHand;
 	}
  }
