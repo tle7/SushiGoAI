@@ -83,5 +83,10 @@ public class GamePlay {
 		}
 		return currHand;
 	}
+	
+	private static int countScoreInHand(ArrayList<String> currHand) {
+		int currScore = 0;
+		return currScore;
+	}
 }
 
