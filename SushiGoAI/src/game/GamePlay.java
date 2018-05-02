@@ -26,19 +26,98 @@ public class GamePlay {
 		initializeConstants();
 		//Eventually, need to add a console prompt asking the user how many players are playing.
 		initializePlayers(2);
-		
+
+		/*ArrayList<String> testArrList = new ArrayList<String>();
+		testArrList.add("Sashimi");
+		testArrList.add("Tempura");
+		testArrList.add("Wasabi");
+		testArrList.add("Sashimi");
+		testArrList.add("Salmon-Nigiri");
+		testArrList.add("Tempura");
+		testArrList.add("Sashimi");*/
+
 		Scanner scanner = new Scanner(System.in);
-		System.out.println("Welcome to SushiGoAI! \n Here is your hand: ");
-		for (String s : players.get(0).getSelectedCards()) {
-			System.out.println(s);
+		
+		System.out.println("Welcome to SushiGoAI!");
+		System.out.println("\n");
+		
+		for (int r = 0; r < 3; r++) {
+			
+			System.out.println("Round " + r);
+			System.out.println("\n");
+			for (int l = 0; l < players.size(); l++) {
+				System.out.println("Player " + (l+1) + "'s score is: " + players.get(l).getTotalPoints());
+			}
+			System.out.println("\n");
+		
+			boolean roundHasEnded = false;
+			
+			while(true) {
+	
+				for (int i = 0; i < players.size(); i++) {
+					
+					Player currPlayer = players.get(i);
+					
+					if (currPlayer.getHand().size() == 0) {
+						System.out.println("End of round!");
+						roundHasEnded = true;
+						break;
+					}
+					
+					System.out.println("Player " + (i+1) + ": It's your turn!");
+					System.out.println("\n");
+					
+					if (currPlayer.getSelectedCards().size() == 0) {
+						System.out.println("You have not selected any cards!");
+						System.out.println("\n");
+					} else {
+						System.out.println("Here are your selected cards: ");
+						ArrayList<String> currentSelection= players.get(i).getSelectedCards();
+						for (int j = 0; j < currentSelection.size(); j++) {
+							System.out.println(currentSelection.get(j));
+						}	
+						System.out.println("\n");
+					}
+					System.out.println("Here is your current hand: ");
+					for (String s : currPlayer.getHand()) {
+						System.out.println(s);
+					}
+					System.out.println("\n");
+					System.out.println("Choose a card to keep by typing its name here: ");
+					String cardToKeep = scanner.nextLine().toLowerCase();
+					
+					currPlayer.updateSelectedCards(cardToKeep);
+					currPlayer.getHand().remove(cardToKeep);
+					System.out.println("\n");
+					System.out.println("You have chosen to keep the following card: " + cardToKeep);
+					System.out.println("\n");
+					try {
+						Thread.sleep(2000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					//countScoreInHand(testArrList, null);
+				}
+				
+				if (roundHasEnded) break;
+				
+				//Players all pass their selected cards to the player on their left (represented by incrementing 1 player up)
+				ArrayList<String> lastPlayerHand = players.get(players.size() - 1).getHand();
+				for (int p = 1; p < players.size(); p++) {
+					Player currPlayer = players.get(p);
+					Player previous = players.get(p-1);
+					ArrayList<String> previousHand = previous.getHand();
+					currPlayer.updateHand(previousHand);
+				}
+				players.get(0).updateHand(lastPlayerHand);
+			}
+			
+			//Show each player's score at the end of the round:
+			for (int k = 0; k < players.size(); k++) {
+				System.out.println("Score for player " + k + ": ");
+				countScoreInHand(players.get(k).getHand(), players.get(k));
+			}
 		}
-		System.out.println("Choose a card to keep by typing its name here: ");
-		String cardToKeep = scanner.nextLine().toLowerCase();
-		//if (players.get(0))
-		players.get(0).updateSelectedCards(cardToKeep);
-		System.out.println("You have chosen to keep the following card: " + cardToKeep);
-		
-		
 	}
 	
 	private static void initializeConstants() {
@@ -91,13 +170,84 @@ public class GamePlay {
 		return currHand;
 	}
 	
+	String[] cardNamesArr = new String[] {};
+	
 	private static void countScoreInHand(ArrayList<String> currHand, Player currPlayer) {
 		int currScore = 0;
 		int numWasabi = 0;
 		int numTempura = 0;
 		int numSashimi = 0;
+		int numDumplings = 0;
+		int numMaki = 0;
+		int numPudding = 0;
 		for (String card: currHand) {
-			
+			System.out.println(card);
+			if(card.equals("Tempura"))
+				numTempura++;
+			else if (card.equals("Wasabi"))
+				numWasabi++;
+			else if (card.equals("Dumpling"))
+				numDumplings++;
+			else if (card.equals("Sashimi"))
+				numSashimi++;
+			else if (card.equals("One-Maki"))
+				numMaki++;
+			else if (card.equals("Two-Maki"))
+				numMaki += 2;
+			else if (card.equals("Three-Maki"))
+				numMaki += 3;
+			else if (card.equals("Salmon-Nigiri")) {
+				if (numWasabi > 0) {
+					currScore += 6;
+					System.out.println("wasabi with salmon");
+					numWasabi--;
+				} else {
+					System.out.println("plain salmon");
+					currScore += 2;
+				}
+			}
+			else if (card.equals("Squid-Nigiri")) {
+				if (numWasabi > 0) {
+					currScore += 9;
+					numWasabi--;
+				} else {
+					currScore += 3;
+				}
+			}
+			else if (card.equals("Egg-Nigiri")) {
+				if (numWasabi > 0) {
+					currScore += 3;
+					numWasabi--;
+				} else {
+					currScore += 1;
+				}
+			}	
+		}
+		
+		currScore += ((numTempura / 2) * 5);
+		currScore += ((numSashimi / 3) * 10);
+		currScore += calcDumplingScore(numDumplings);
+		
+		currPlayer.updateTotalPoints(currScore);
+		
+		//need to update number maki and number pudding and total score
+		System.out.println(currScore);
+	}
+	
+	private static int calcDumplingScore (int numDumplings) {
+		switch (numDumplings) {
+		case 1:
+			return 1;
+		case 2:
+			return 3;
+		case 3:
+			return 6;
+		case 4: 
+			return 10;
+		case 5:
+			return 15;
+		default:
+			return 0;
 		}
 	}
 }
