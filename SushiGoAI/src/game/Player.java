@@ -42,6 +42,10 @@ public class Player {
 		return numPuddings;
 	}
 	
+	public ArrayList<String> getCardsInHand() {
+		return cardsInHand;
+	}
+	
 	public void updateHand(ArrayList<String> updatedHand) {
 		cardsInHand = updatedHand;
 	}

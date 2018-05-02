@@ -176,7 +176,37 @@ public class GamePlay {
 			firstPlace.updateTotalPoints(6);
 			secondPlace.updateTotalPoints(3);
 		}
+	}
+	
+	private static void handlePuddingScore() {
+		Player firstPlace = players.get(0);
+		Player secondPlace = players.get(1);
+		int firstPlaceNumPudding = firstPlace.getNumPuddings();
+		int secondPlaceNumPudding = secondPlace.getNumPuddings();
 		
+		if (firstPlaceNumPudding == secondPlaceNumPudding)
+			return;
+		
+		if (firstPlaceNumPudding < secondPlaceNumPudding) {
+			Player temp = firstPlace;
+			firstPlace = secondPlace;
+			secondPlace = temp;
+		}
+		
+		firstPlace.updateTotalPoints(6);
+		secondPlace.updateTotalPoints(-6);
+	}
+		
+	private static void updateHandAndCards (Player player, String input) {
+		input = input.toLowerCase();
+		
+		// update player's selected cards
+		player.updateCards(input);
+		
+		// remove from hand
+		ArrayList<String> cardsInHand = player.getCardsInHand();
+		cardsInHand.remove(input);
+		player.updateHand(cardsInHand);
 	}
 }
 
