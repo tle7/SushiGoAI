@@ -26,7 +26,6 @@ public class GamePlay {
 		initializeConstants();
 		//Eventually, need to add a console prompt asking the user how many players are playing.
 		initializePlayers(2);
-<<<<<<< HEAD
 
 		/*ArrayList<String> testArrList = new ArrayList<String>();
 		testArrList.add("Sashimi");
@@ -119,8 +118,7 @@ public class GamePlay {
 				countScoreInHand(players.get(k).getHand(), players.get(k));
 			}
 		}
-=======
->>>>>>> branch 'master' of https://github.com/tle7/SushiGoAI.git
+
 	}
 	
 	private static void initializeConstants() {
@@ -226,17 +224,17 @@ public class GamePlay {
 		currScore += ((numSashimi / 3) * 10);
 		currScore += calcDumplingScore(numDumplings);
 		
-<<<<<<< HEAD
+
 		currPlayer.updateTotalPoints(currScore);
 		
 		//need to update number maki and number pudding and total score
 		System.out.println(currScore);
-=======
+
 		//update number maki and number pudding and total score
 		currPlayer.setNumMaki(numMaki);
 		currPlayer.updateNumPuddings(numPudding);
 		currPlayer.updateTotalPoints(currScore);
->>>>>>> branch 'master' of https://github.com/tle7/SushiGoAI.git
+
 	}
 	
 	private static int calcDumplingScore (int numDumplings) {
