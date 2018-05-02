@@ -45,6 +45,14 @@ public class Player {
 	}
 	
 	public ArrayList<String> getHand() {
-		return hand;
+		return cardsInHand;
+	}
+	
+	public void updateSelectedCards(String cardToAdd) {
+		selectedCards.add(cardToAdd);
+	}
+	
+	public ArrayList<String> getSelectedCards() {
+		return selectedCards;
 	}
  }

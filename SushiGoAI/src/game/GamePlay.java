@@ -29,11 +29,13 @@ public class GamePlay {
 		
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("Welcome to SushiGoAI! \n Here is your hand: ");
-		for (String s : players.get(0).getHand()) {
+		for (String s : players.get(0).getSelectedCards()) {
 			System.out.println(s);
 		}
 		System.out.println("Choose a card to keep by typing its name here: ");
 		String cardToKeep = scanner.nextLine().toLowerCase();
+		//if (players.get(0))
+		players.get(0).updateSelectedCards(cardToKeep);
 		System.out.println("You have chosen to keep the following card: " + cardToKeep);
 		
 		
