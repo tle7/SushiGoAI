@@ -93,5 +93,17 @@ public class GamePlay {
 			
 		}
 	}
+	
+	private static void updateHandAndCards (Player player, String input) {
+		input = input.toLowerCase();
+		
+		// update player's selected cards
+		player.updateCards(input);
+		
+		// remove from hand
+		ArrayList<String> cardsInHand = player.getCardsInHand();
+		cardsInHand.remove(input);
+		player.updateHand(cardsInHand);
+	}
 }
 
