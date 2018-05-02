@@ -8,12 +8,14 @@ public class Player {
 	private ArrayList<String> cardsInHand;
 	private int totalPoints;
 	private int numPuddings;
+	private int currRoundNumMaki;
 	
 	public Player() {
 		selectedCards = new ArrayList<String>();
 		cardsInHand = new ArrayList<String>();
 		totalPoints = 0;
 		numPuddings = 0;
+		currRoundNumMaki = 0;
 	}
 	
 	public void updateCards(String newCard) {
@@ -42,5 +44,17 @@ public class Player {
 	
 	public void updateHand(ArrayList<String> updatedHand) {
 		cardsInHand = updatedHand;
+	}
+	
+	public void setNumMaki(int numMaki) {
+		currRoundNumMaki = numMaki;
+	}
+	
+	public void resetNumMaki() {
+		currRoundNumMaki = 0;
+	}
+	
+	public int getNumMaki() {
+		return currRoundNumMaki;
 	}
  }
