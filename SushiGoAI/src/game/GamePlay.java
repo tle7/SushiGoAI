@@ -29,9 +29,16 @@ public class GamePlay {
 		//Eventually, need to add a console prompt asking the user how many players are playing.
 		initializePlayers(2);
 
+		ArrayList<String> testArrList = new ArrayList<String>();
+		testArrList.add("Sashimi");
+		testArrList.add("Tempura");
+		testArrList.add("Wasabi");
+		testArrList.add("Sashimi");
+		testArrList.add("Salmon-Nigiri");
+		testArrList.add("Tempura");
+		testArrList.add("Sashimi");
 		
-		
-		
+		countScoreInHand(testArrList, null);
 	}
 	
 	private static void initializeConstants() {
@@ -84,13 +91,82 @@ public class GamePlay {
 		return currHand;
 	}
 	
+	String[] cardNamesArr = new String[] {};
+	
 	private static void countScoreInHand(ArrayList<String> currHand, Player currPlayer) {
 		int currScore = 0;
 		int numWasabi = 0;
 		int numTempura = 0;
 		int numSashimi = 0;
+		int numDumplings = 0;
+		int numMaki = 0;
+		int numPudding = 0;
 		for (String card: currHand) {
-			
+			System.out.println(card);
+			if(card.equals("Tempura"))
+				numTempura++;
+			else if (card.equals("Wasabi"))
+				numWasabi++;
+			else if (card.equals("Dumpling"))
+				numDumplings++;
+			else if (card.equals("Sashimi"))
+				numSashimi++;
+			else if (card.equals("One-Maki"))
+				numMaki++;
+			else if (card.equals("Two-Maki"))
+				numMaki += 2;
+			else if (card.equals("Three-Maki"))
+				numMaki += 3;
+			else if (card.equals("Salmon-Nigiri")) {
+				if (numWasabi > 0) {
+					currScore += 6;
+					System.out.println("wasabi with salmon");
+					numWasabi--;
+				} else {
+					System.out.println("plain salmon");
+					currScore += 2;
+				}
+			}
+			else if (card.equals("Squid-Nigiri")) {
+				if (numWasabi > 0) {
+					currScore += 9;
+					numWasabi--;
+				} else {
+					currScore += 3;
+				}
+			}
+			else if (card.equals("Egg-Nigiri")) {
+				if (numWasabi > 0) {
+					currScore += 3;
+					numWasabi--;
+				} else {
+					currScore += 1;
+				}
+			}	
+		}
+		
+		currScore += ((numTempura / 2) * 5);
+		currScore += ((numSashimi / 3) * 10);
+		currScore += calcDumplingScore(numDumplings);
+		
+		//need to update number maki and number pudding and total score
+		System.out.println(currScore);
+	}
+	
+	private static int calcDumplingScore (int numDumplings) {
+		switch (numDumplings) {
+		case 1:
+			return 1;
+		case 2:
+			return 3;
+		case 3:
+			return 6;
+		case 4: 
+			return 10;
+		case 5:
+			return 15;
+		default:
+			return 0;
 		}
 	}
 	
