@@ -127,7 +127,7 @@ public class GamePlay {
 			//Show each player's score at the end of the round:
 			for (int k = 0; k < players.size(); k++) {
 				System.out.println("Score for player " + k + ": ");
-				countScoreInHand(players.get(k).getHand(), players.get(k));
+				countScoreInHand(players.get(k).getSelectedCards(), players.get(k));
 			}
 		}
 
