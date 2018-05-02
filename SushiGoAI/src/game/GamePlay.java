@@ -26,6 +26,7 @@ public class GamePlay {
 		initializeConstants();
 		//Eventually, need to add a console prompt asking the user how many players are playing.
 		initializePlayers(2);
+<<<<<<< HEAD
 
 		/*ArrayList<String> testArrList = new ArrayList<String>();
 		testArrList.add("Sashimi");
@@ -118,6 +119,8 @@ public class GamePlay {
 				countScoreInHand(players.get(k).getHand(), players.get(k));
 			}
 		}
+=======
+>>>>>>> branch 'master' of https://github.com/tle7/SushiGoAI.git
 	}
 	
 	private static void initializeConstants() {
@@ -170,8 +173,6 @@ public class GamePlay {
 		return currHand;
 	}
 	
-	String[] cardNamesArr = new String[] {};
-	
 	private static void countScoreInHand(ArrayList<String> currHand, Player currPlayer) {
 		int currScore = 0;
 		int numWasabi = 0;
@@ -181,7 +182,6 @@ public class GamePlay {
 		int numMaki = 0;
 		int numPudding = 0;
 		for (String card: currHand) {
-			System.out.println(card);
 			if(card.equals("Tempura"))
 				numTempura++;
 			else if (card.equals("Wasabi"))
@@ -199,10 +199,8 @@ public class GamePlay {
 			else if (card.equals("Salmon-Nigiri")) {
 				if (numWasabi > 0) {
 					currScore += 6;
-					System.out.println("wasabi with salmon");
 					numWasabi--;
 				} else {
-					System.out.println("plain salmon");
 					currScore += 2;
 				}
 			}
@@ -228,10 +226,17 @@ public class GamePlay {
 		currScore += ((numSashimi / 3) * 10);
 		currScore += calcDumplingScore(numDumplings);
 		
+<<<<<<< HEAD
 		currPlayer.updateTotalPoints(currScore);
 		
 		//need to update number maki and number pudding and total score
 		System.out.println(currScore);
+=======
+		//update number maki and number pudding and total score
+		currPlayer.setNumMaki(numMaki);
+		currPlayer.updateNumPuddings(numPudding);
+		currPlayer.updateTotalPoints(currScore);
+>>>>>>> branch 'master' of https://github.com/tle7/SushiGoAI.git
 	}
 	
 	private static int calcDumplingScore (int numDumplings) {
@@ -249,6 +254,59 @@ public class GamePlay {
 		default:
 			return 0;
 		}
+	}
+	
+	//updates the maki score for two players
+	private static void handleMakiScore() {
+		Player firstPlace = players.get(0);
+		Player secondPlace = players.get(1);
+		int firstPlaceScore = firstPlace.getNumMaki();
+		int secondPlaceScore = secondPlace.getNumMaki();
+		
+		if (secondPlaceScore > firstPlaceScore) {
+			Player temp = firstPlace;
+			firstPlace = secondPlace;
+			secondPlace = temp;
+		} 
+		
+		if (firstPlaceScore == secondPlaceScore) {
+			firstPlace.updateTotalPoints(3);
+			secondPlace.updateTotalPoints(3);
+		} else {
+			firstPlace.updateTotalPoints(6);
+			secondPlace.updateTotalPoints(3);
+		}
+	}
+	
+	private static void handlePuddingScore() {
+		Player firstPlace = players.get(0);
+		Player secondPlace = players.get(1);
+		int firstPlaceNumPudding = firstPlace.getNumPuddings();
+		int secondPlaceNumPudding = secondPlace.getNumPuddings();
+		
+		if (firstPlaceNumPudding == secondPlaceNumPudding)
+			return;
+		
+		if (firstPlaceNumPudding < secondPlaceNumPudding) {
+			Player temp = firstPlace;
+			firstPlace = secondPlace;
+			secondPlace = temp;
+		}
+		
+		firstPlace.updateTotalPoints(6);
+		secondPlace.updateTotalPoints(-6);
+	}
+		
+	private static void updateHandAndCards (Player player, String input) {
+		input = input.toLowerCase();
+		
+		// update player's selected cards
+		player.updateCards(input);
+		
+		// remove from hand
+		ArrayList<String> cardsInHand = player.getCardsInHand();
+		cardsInHand.remove(input);
+		player.updateHand(cardsInHand);
 	}
 }
 

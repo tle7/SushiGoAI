@@ -8,12 +8,14 @@ public class Player {
 	private ArrayList<String> cardsInHand;
 	private int totalPoints;
 	private int numPuddings;
+	private int currRoundNumMaki;
 	
 	public Player() {
 		selectedCards = new ArrayList<String>();
 		cardsInHand = new ArrayList<String>();
 		totalPoints = 0;
 		numPuddings = 0;
+		currRoundNumMaki = 0;
 	}
 	
 	public void updateCards(String newCard) {
@@ -40,10 +42,15 @@ public class Player {
 		return numPuddings;
 	}
 	
+	public ArrayList<String> getCardsInHand() {
+		return cardsInHand;
+	}
+	
 	public void updateHand(ArrayList<String> updatedHand) {
 		cardsInHand = updatedHand;
 	}
 	
+<<<<<<< HEAD
 	public ArrayList<String> getHand() {
 		return cardsInHand;
 	}
@@ -54,5 +61,17 @@ public class Player {
 	
 	public ArrayList<String> getSelectedCards() {
 		return selectedCards;
+=======
+	public void setNumMaki(int numMaki) {
+		currRoundNumMaki = numMaki;
+	}
+	
+	public void resetNumMaki() {
+		currRoundNumMaki = 0;
+	}
+	
+	public int getNumMaki() {
+		return currRoundNumMaki;
+>>>>>>> branch 'master' of https://github.com/tle7/SushiGoAI.git
 	}
  }
