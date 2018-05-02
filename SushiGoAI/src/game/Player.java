@@ -50,7 +50,6 @@ public class Player {
 		cardsInHand = updatedHand;
 	}
 	
-<<<<<<< HEAD
 	public ArrayList<String> getHand() {
 		return cardsInHand;
 	}
@@ -61,7 +60,8 @@ public class Player {
 	
 	public ArrayList<String> getSelectedCards() {
 		return selectedCards;
-=======
+	}
+	
 	public void setNumMaki(int numMaki) {
 		currRoundNumMaki = numMaki;
 	}
@@ -72,6 +72,5 @@ public class Player {
 	
 	public int getNumMaki() {
 		return currRoundNumMaki;
->>>>>>> branch 'master' of https://github.com/tle7/SushiGoAI.git
 	}
  }
