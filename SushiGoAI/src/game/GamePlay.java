@@ -28,20 +28,6 @@ public class GamePlay {
 		
 		//Eventually, need to add a console prompt asking the user how many players are playing.
 		initializePlayers(2);
-
-		ArrayList<String> testArrList = new ArrayList<String>();
-		testArrList.add("Sashimi");
-		testArrList.add("Tempura");
-		testArrList.add("Wasabi");
-		testArrList.add("Sashimi");
-		testArrList.add("Salmon-Nigiri");
-		testArrList.add("Tempura");
-		testArrList.add("One-Maki");
-		testArrList.add("Sashimi");
-		testArrList.add("Four-Maki"); //invalid
-		testArrList.add("Three-Maki");
-		
-		countScoreInHand(testArrList, players.get(0));
 	}
 	
 	private static void initializeConstants() {
@@ -93,8 +79,6 @@ public class GamePlay {
 		}
 		return currHand;
 	}
-	
-	String[] cardNamesArr = new String[] {};
 	
 	private static void countScoreInHand(ArrayList<String> currHand, Player currPlayer) {
 		int currScore = 0;
