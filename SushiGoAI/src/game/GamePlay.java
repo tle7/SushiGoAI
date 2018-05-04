@@ -83,15 +83,29 @@ public class GamePlay {
 					}
 					System.out.println("\n");
 					String cardToKeep = null;
-					System.out.println("Choose a card to keep by typing its name here: ");
-					while (cardToKeep == null) {
-						String currInput = scanner.nextLine().toLowerCase();
-						if (currPlayer.getHand().contains(currInput)) {
-							cardToKeep = currInput;
-						} else {
-							System.out.println("That card isn't in the current hand. Please enter again: ");
+					
+					if (i == 0) {
+						System.out.println("Choose a card to keep by typing its name here: ");
+						while (cardToKeep == null) {
+							String currInput = scanner.nextLine().toLowerCase();
+							if (currPlayer.getHand().contains(currInput)) {
+								cardToKeep = currInput;
+							} else {
+								System.out.println("That card isn't in the current hand. Please enter again: ");
+							}
 						}
-					}
+					} else {
+						ArrayList<String> hand = currPlayer.getHand();
+						Random rand = new Random();
+						int randIndex = rand.nextInt(hand.size());
+						cardToKeep = hand.get(randIndex);
+						System.out.println("Choose a card to keep: " + cardToKeep);
+						try {
+							Thread.sleep(2000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+ 					}
 					
 					currPlayer.updateSelectedCards(cardToKeep);
 					ArrayList<String> newHand = currPlayer.getHand();
@@ -108,11 +122,11 @@ public class GamePlay {
 					System.out.println("\n");
 					System.out.println("You have chosen to keep the following card: " + cardToKeep);
 					System.out.println("\n");
-//					try {
-//						Thread.sleep(2000);
-//					} catch (InterruptedException e) {
-//						e.printStackTrace();
-//					}
+					try {
+						Thread.sleep(2000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 					//countScoreInHand(testArrList, null);
 				}
 				
