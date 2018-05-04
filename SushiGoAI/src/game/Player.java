@@ -9,6 +9,7 @@ public class Player {
 	private int totalPoints;
 	private int numPuddings;
 	private int currRoundNumMaki;
+	private int roundPoints;
 	
 	public Player() {
 		selectedCards = new ArrayList<String>();
@@ -16,6 +17,7 @@ public class Player {
 		totalPoints = 0;
 		numPuddings = 0;
 		currRoundNumMaki = 0;
+		roundPoints = 0;
 	}
 	
 	public void updateCards(String newCard) {
@@ -32,6 +34,18 @@ public class Player {
 	
 	public int getTotalPoints() {
 		return totalPoints;
+	}
+	
+	public void setRoundPoints(int points) {
+		roundPoints = points;
+	}
+	
+	public void updateRoundPoints(int pointsToAdd) {
+		roundPoints += pointsToAdd;
+	}
+	
+	public int getRoundPoints() {
+		return roundPoints;
 	}
 	
 	public void updateNumPuddings(int puddingsToAdd) {

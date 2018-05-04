@@ -154,8 +154,9 @@ public class GamePlay {
 				Player currPlayer = players.get(k);
 				currPlayer.resetNumMaki();
 				currPlayer.resetSelectedCards();
-				System.out.println("Score for player " + (k + 1) + ": ");
-				System.out.println(players.get(k).getTotalPoints());
+				currPlayer.updateTotalPoints(currPlayer.getRoundPoints());
+				System.out.println("Round " + (r+1) + " Score for player " + (k + 1) + ": ");
+				System.out.println(players.get(k).getRoundPoints());
 			}
 		}
 		System.out.println("Game is over");
@@ -243,7 +244,7 @@ public class GamePlay {
 			else if (card.equals("salmon-nigiri")) {
 				if (numWasabi > 0) {
 					currScore += 6;
-					System.out.println("Score tripled!");
+//					System.out.println("Score tripled!");
 					numWasabi--;
 				} else {
 					currScore += 2;
@@ -253,7 +254,7 @@ public class GamePlay {
 				if (numWasabi > 0) {
 					currScore += 9;
 					numWasabi--;
-					System.out.println("Score tripled!");
+//					System.out.println("Score tripled!");
 				} else {
 					currScore += 3;
 				}
@@ -261,7 +262,7 @@ public class GamePlay {
 			else if (card.equals("egg-nigiri")) {
 				if (numWasabi > 0) {
 					currScore += 3;
-					System.out.println("Score tripled!");
+//					System.out.println("Score tripled!");
 					numWasabi--;
 				} else {
 					currScore += 1;
@@ -276,7 +277,7 @@ public class GamePlay {
 		//update number maki and number pudding and total score
 		currPlayer.setNumMaki(numMaki);
 		currPlayer.updateNumPuddings(numPudding);
-		currPlayer.updateTotalPoints(currScore);
+		currPlayer.setRoundPoints(currScore);
 	}
 	
 	private static int calcDumplingScore (int numDumplings) {
@@ -303,8 +304,8 @@ public class GamePlay {
 		int firstPlaceScore = firstPlace.getNumMaki();
 		int secondPlaceScore = secondPlace.getNumMaki();
 		
-		System.out.println("Player 1 has Maki Score: " + Integer.toString(firstPlaceScore));
-		System.out.println("Player 2 has Maki Score: " + Integer.toString(secondPlaceScore));
+//		System.out.println("Player 1 has Maki Score: " + Integer.toString(firstPlaceScore));
+//		System.out.println("Player 2 has Maki Score: " + Integer.toString(secondPlaceScore));
 		
 		if (secondPlaceScore > firstPlaceScore) {
 			Player temp = firstPlace;
@@ -313,11 +314,11 @@ public class GamePlay {
 		} 
 		
 		if (firstPlaceScore == secondPlaceScore) {
-			firstPlace.updateTotalPoints(3);
-			secondPlace.updateTotalPoints(3);
+			firstPlace.updateRoundPoints(3);
+			secondPlace.updateRoundPoints(3);
 		} else {
-			firstPlace.updateTotalPoints(6);
-			secondPlace.updateTotalPoints(3);
+			firstPlace.updateRoundPoints(6);
+			secondPlace.updateRoundPoints(3);
 		}
 	}
 	
