@@ -73,4 +73,8 @@ public class Player {
 	public int getNumMaki() {
 		return currRoundNumMaki;
 	}
+	
+	public void resetSelectedCards() {
+		selectedCards.clear();
+	}
  }

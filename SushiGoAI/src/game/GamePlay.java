@@ -17,24 +17,18 @@ public class GamePlay {
 	private static final int CHOPSTICKS = 4;
 	
 	private static final int NUM_TWO_PLAYER_CARDS = 10;
+//	private static final int NUM_TWO_PLAYER_CARDS = 1;
 	
 	private static final ArrayList<String> deck = new ArrayList<String>();
 	private static final ArrayList<Player> players = new ArrayList<Player>();
-	
+//	public static final String[] cardNamesArr = new String[] {"tempura", "sashimi", "dumpling", "two-maki", "three-maki", "one-maki", "salmon-nigiri", "squid-nigiri",
+//			"egg-nigiri", "pudding", "wasabi", "chopsticks"};
+//	public static final Set<String> cardNamesSet = new HashSet<>(Arrays.asList(cardNamesArr));
 	
 	public static void main(String[] args) {
 		initializeConstants();
 		//Eventually, need to add a console prompt asking the user how many players are playing.
 		initializePlayers(2);
-
-		/*ArrayList<String> testArrList = new ArrayList<String>();
-		testArrList.add("Sashimi");
-		testArrList.add("Tempura");
-		testArrList.add("Wasabi");
-		testArrList.add("Sashimi");
-		testArrList.add("Salmon-Nigiri");
-		testArrList.add("Tempura");
-		testArrList.add("Sashimi");*/
 
 		Scanner scanner = new Scanner(System.in);
 		
@@ -42,7 +36,6 @@ public class GamePlay {
 		System.out.println("\n");
 		
 		for (int r = 0; r < 3; r++) {
-			
 			System.out.println("Round " + (r+1));
 			System.out.println("\n");
 			for (int l = 0; l < players.size(); l++) {
@@ -51,6 +44,12 @@ public class GamePlay {
 			System.out.println("\n");
 		
 			boolean roundHasEnded = false;
+			
+			if (r != 0) {
+				for (int p = 0; p < players.size(); p++) {
+					players.get(p).updateHand(getCardHand(NUM_TWO_PLAYER_CARDS));
+				}
+			}
 			
 			while(true) {
 	
@@ -83,13 +82,19 @@ public class GamePlay {
 						System.out.println(s);
 					}
 					System.out.println("\n");
+					String cardToKeep = null;
 					System.out.println("Choose a card to keep by typing its name here: ");
-					String cardToKeep = scanner.nextLine().toLowerCase();
+					while (cardToKeep == null) {
+						String currInput = scanner.nextLine().toLowerCase();
+						if (currPlayer.getHand().contains(currInput)) {
+							cardToKeep = currInput;
+						} else {
+							System.out.println("That card isn't in the current hand. Please enter again: ");
+						}
+					}
 					
 					currPlayer.updateSelectedCards(cardToKeep);
 					ArrayList<String> newHand = currPlayer.getHand();
-					
-					//int indexToRemove = newHand.indexOf(cardToKeep);
 					newHand.remove(cardToKeep);
 					
 					System.out.println("================");
@@ -103,11 +108,11 @@ public class GamePlay {
 					System.out.println("\n");
 					System.out.println("You have chosen to keep the following card: " + cardToKeep);
 					System.out.println("\n");
-					try {
-						Thread.sleep(2000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+//					try {
+//						Thread.sleep(2000);
+//					} catch (InterruptedException e) {
+//						e.printStackTrace();
+//					}
 					//countScoreInHand(testArrList, null);
 				}
 				
@@ -124,13 +129,26 @@ public class GamePlay {
 				players.get(0).updateHand(lastPlayerHand);
 			}
 			
-			//Show each player's score at the end of the round:
+			//Update each player's score
+			for (int n = 0; n < players.size(); n++) {
+				countScoreInHand(players.get(n).getSelectedCards(), players.get(n));
+			}
+			handleMakiScore();
+			
+			//Show each player's score at the end of the round and deal a new hand
 			for (int k = 0; k < players.size(); k++) {
-				System.out.println("Score for player " + k + ": ");
-				countScoreInHand(players.get(k).getSelectedCards(), players.get(k));
+				Player currPlayer = players.get(k);
+				currPlayer.resetNumMaki();
+				currPlayer.resetSelectedCards();
+				System.out.println("Score for player " + (k + 1) + ": ");
+				System.out.println(players.get(k).getTotalPoints());
 			}
 		}
-
+		System.out.println("Game is over");
+		handlePuddingScore();
+		for (int i = 0; i < players.size(); i++) {
+			System.out.println("Player " + (i + 1) + "'s final score is: " + Integer.toString(players.get(i).getTotalPoints()));
+		}
 	}
 	
 	private static void initializeConstants() {
@@ -206,9 +224,12 @@ public class GamePlay {
 				numMaki += 2;
 			else if (card.equals("three-maki"))
 				numMaki += 3;
+			else if (card.equals("pudding"))
+				numPudding++;
 			else if (card.equals("salmon-nigiri")) {
 				if (numWasabi > 0) {
 					currScore += 6;
+					System.out.println("Score tripled!");
 					numWasabi--;
 				} else {
 					currScore += 2;
@@ -218,6 +239,7 @@ public class GamePlay {
 				if (numWasabi > 0) {
 					currScore += 9;
 					numWasabi--;
+					System.out.println("Score tripled!");
 				} else {
 					currScore += 3;
 				}
@@ -225,6 +247,7 @@ public class GamePlay {
 			else if (card.equals("egg-nigiri")) {
 				if (numWasabi > 0) {
 					currScore += 3;
+					System.out.println("Score tripled!");
 					numWasabi--;
 				} else {
 					currScore += 1;
@@ -235,18 +258,11 @@ public class GamePlay {
 		currScore += ((numTempura / 2) * 5);
 		currScore += ((numSashimi / 3) * 10);
 		currScore += calcDumplingScore(numDumplings);
-		
-
-		currPlayer.updateTotalPoints(currScore);
-		
-		//need to update number maki and number pudding and total score
-		System.out.println(currScore);
 
 		//update number maki and number pudding and total score
 		currPlayer.setNumMaki(numMaki);
 		currPlayer.updateNumPuddings(numPudding);
 		currPlayer.updateTotalPoints(currScore);
-
 	}
 	
 	private static int calcDumplingScore (int numDumplings) {
@@ -273,6 +289,9 @@ public class GamePlay {
 		int firstPlaceScore = firstPlace.getNumMaki();
 		int secondPlaceScore = secondPlace.getNumMaki();
 		
+		System.out.println("Player 1 has Maki Score: " + Integer.toString(firstPlaceScore));
+		System.out.println("Player 2 has Maki Score: " + Integer.toString(secondPlaceScore));
+		
 		if (secondPlaceScore > firstPlaceScore) {
 			Player temp = firstPlace;
 			firstPlace = secondPlace;
@@ -293,6 +312,7 @@ public class GamePlay {
 		Player secondPlace = players.get(1);
 		int firstPlaceNumPudding = firstPlace.getNumPuddings();
 		int secondPlaceNumPudding = secondPlace.getNumPuddings();
+		
 		
 		if (firstPlaceNumPudding == secondPlaceNumPudding)
 			return;
