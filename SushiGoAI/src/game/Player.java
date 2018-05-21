@@ -109,4 +109,8 @@ public class Player {
 		numChopsticksSelected--;
 		cardsInHand.add("chopsticks");
 	}
+	
+	public void resetNumChopsticks() {
+		numChopsticksSelected = 0;
+	}
  }

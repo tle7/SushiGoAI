@@ -16,7 +16,7 @@ public class GamePlay {
 	private static final int WASABI = 6;
 	private static final int CHOPSTICKS = 4;
 
-	private static final int NUM_TWO_PLAYER_CARDS = 10;
+	private static final int NUM_TWO_PLAYER_CARDS = 4;
 	private static Scanner scanner;
 
 	private static final ArrayList<String> deck = new ArrayList<String>();
@@ -145,6 +145,7 @@ public class GamePlay {
 				currPlayer.updateTotalPoints(currPlayer.getRoundPoints());
 				System.out.println("Round " + (r+1) + " Score for player " + (k + 1) + ": ");
 				System.out.println(players.get(k).getRoundPoints());
+				currPlayer.resetNumChopsticks();
 			}
 		}
 		System.out.println("Game is over");
