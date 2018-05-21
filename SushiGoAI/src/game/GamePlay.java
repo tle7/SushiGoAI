@@ -85,7 +85,7 @@ public class GamePlay {
 
 
 					int numCardSelections = 1;
-					if (currPlayer.getNumChopsticks() > 0)
+					if (currPlayer.getNumChopsticks() > 0 && currPlayer.getCardsInHand().size() > 1)
 						numCardSelections = 2;
 					if (i == 0) {
 						//						boolean haveChopsticks = currPlayer.getNumChopsticks() > 0;
