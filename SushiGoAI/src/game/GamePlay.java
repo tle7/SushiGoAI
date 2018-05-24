@@ -489,8 +489,11 @@ public class GamePlay {
 				ArrayList<String> selectedCards = copyPlayer.getSelectedCards();
 				ArrayList<String> handCards = copyPlayer.getCardsInHand();
 				String currCard = handCards.get(s);
-				selectedCards.add(currCard);
-				handCards.remove(currCard);
+				if (currCard.equals("chopsticks")) {
+					copyPlayer.incrementNumChopsticks();
+				}
+				copyPlayer.updateSelectedCards(currCard);
+				copyPlayer.removeSelectedCards(currCard);
 				
 				//form player array for next iteration
 				ArrayList<Player> currChoicePlayers = new ArrayList<Player>();
@@ -505,6 +508,43 @@ public class GamePlay {
 				currScoreAction.actions.add(currCard);
 				currScoreAction.score = recurseScoreAction.score;
 				allActionScores.add(currScoreAction);
+			}
+			
+			if (agent.getNumChopsticks() > 0) {
+				for (int i = 0; i < agent.getCardsInHand().size()-1; i++) {
+					for (int j = i+1; j < agent.getCardsInHand().size(); j++) {
+						Player copyPlayer = new Player(agent);
+						String firstCard = copyPlayer.getCardsInHand().get(i);
+						String secondCard = copyPlayer.getCardsInHand().get(j);
+						if (firstCard.equals("chopsticks")) {
+							copyPlayer.incrementNumChopsticks();
+						}
+						if (secondCard.equals("chopsticks")) {
+							copyPlayer.incrementNumChopsticks();
+						}
+						copyPlayer.updateSelectedCards(firstCard);
+						copyPlayer.removeSelectedCards(firstCard);
+						copyPlayer.updateSelectedCards(secondCard);
+						copyPlayer.removeSelectedCards(secondCard);
+						copyPlayer.moveChopsticksToHand();
+						
+						//form player array for next iteration
+						ArrayList<Player> currChoicePlayers = new ArrayList<Player>();
+						for (int p = 0; p < allPlayers.size(); p++) {
+							if (p == agentIndex)
+								currChoicePlayers.add(copyPlayer);
+							else
+								currChoicePlayers.add(allPlayers.get(p));
+						}
+						ScoreAction recurseScoreAction = Vmaxmin(currChoicePlayers, nextDepth, nextAgentIndex);
+						ScoreAction currScoreAction = new ScoreAction();
+						currScoreAction.actions.add(firstCard);
+						currScoreAction.actions.add(secondCard);
+						currScoreAction.score = recurseScoreAction.score;
+						allActionScores.add(currScoreAction);
+					}
+				}
+				
 			}
 			
 			//get the optimal ActionScore
