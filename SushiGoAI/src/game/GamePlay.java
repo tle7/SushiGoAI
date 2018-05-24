@@ -22,7 +22,7 @@ public class GamePlay {
 	private static Scanner scanner;
 
 	private static final ArrayList<String> deck = new ArrayList<String>();
-	private static final ArrayList<Player> players = new ArrayList<Player>();
+	private static ArrayList<Player> players = new ArrayList<Player>();
 	//	public static final String[] cardNamesArr = new String[] {"tempura", "sashimi", "dumpling", "two-maki", "three-maki", "one-maki", "salmon-nigiri", "squid-nigiri",
 	//			"egg-nigiri", "pudding", "wasabi", "chopsticks"};
 	//	public static final Set<String> cardNamesSet = new HashSet<>(Arrays.asList(cardNamesArr));
@@ -102,27 +102,55 @@ public class GamePlay {
 					if (currPlayer.getNumChopsticks() > 0 && currPlayer.getCardsInHand().size() > 1)
 						numCardSelections = 2;
 					if (i == 0) {
+						//AI player
+						ArrayList<Player> copyPlayers = new ArrayList<Player>();
+						for (int playerId = 0; playerId < players.size(); playerId++) {
+							copyPlayers.add(new Player(players.get(playerId)));
+						}
+						ScoreAction optimalScoreAction = Vmaxmin(copyPlayers, 2, 0);
+						ArrayList<String> currPlayerHand = currPlayer.getCardsInHand();
+						for (String optActionCard: optimalScoreAction.actions) {
+							currPlayer.updateCards(optActionCard);
+							currPlayerHand.remove(optActionCard);
+						}
+						currPlayer.updateHand(currPlayerHand);
 						//						boolean haveChopsticks = currPlayer.getNumChopsticks() > 0;
+//						for (int playerCard = 0; playerCard < numCardSelections; playerCard++) {
+//							String currCard = handlePlayerCardSelection(currPlayer, (playerCard == 1) ? true : false);
+//							if (currCard != null)
+//								handleHandUpdates(currPlayer, currCard, (playerCard == 1) ? true : false);
+//						}
+					} else {
+//						ArrayList<String> hand = currPlayer.getHand();
+//						Random rand = new Random();
+//						for (int cpuCard = 0; cpuCard < numCardSelections; cpuCard++) {
+//							int randIndex = rand.nextInt(hand.size());
+//							//						cardToKeep = hand.get(randIndex);
+//							String cpuKeptCard = hand.get(randIndex);
+//							handleHandUpdates(currPlayer, cpuKeptCard, (cpuCard == 1) ? true : false);
+//							//							keptCardsList.add(hand.get(randIndex));
+//							System.out.println("Choose a card to keep: " + cpuKeptCard);
+//							try {
+//								Thread.sleep(2000);
+//							} catch (InterruptedException e) {
+//								e.printStackTrace();
+//							}
+//						}
+//						ArrayList<Player> copyPlayers = new ArrayList<Player>();
+//						for (int playerId = 0; playerId < players.size(); playerId++) {
+//							copyPlayers.add(new Player(players.get(playerId)));
+//						}
+//						ScoreAction optimalScoreAction = Vmaxmin(copyPlayers, 2, 0);
+//						ArrayList<String> currPlayerHand = currPlayer.getCardsInHand();
+//						for (String optActionCard: optimalScoreAction.actions) {
+//							currPlayer.updateCards(optActionCard);
+//							currPlayerHand.remove(optActionCard);
+//						}
+//						currPlayer.updateHand(currPlayerHand);
 						for (int playerCard = 0; playerCard < numCardSelections; playerCard++) {
 							String currCard = handlePlayerCardSelection(currPlayer, (playerCard == 1) ? true : false);
 							if (currCard != null)
 								handleHandUpdates(currPlayer, currCard, (playerCard == 1) ? true : false);
-						}
-					} else {
-						ArrayList<String> hand = currPlayer.getHand();
-						Random rand = new Random();
-						for (int cpuCard = 0; cpuCard < numCardSelections; cpuCard++) {
-							int randIndex = rand.nextInt(hand.size());
-							//						cardToKeep = hand.get(randIndex);
-							String cpuKeptCard = hand.get(randIndex);
-							handleHandUpdates(currPlayer, cpuKeptCard, (cpuCard == 1) ? true : false);
-							//							keptCardsList.add(hand.get(randIndex));
-							System.out.println("Choose a card to keep: " + cpuKeptCard);
-							try {
-								Thread.sleep(2000);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
 						}
 					}
 					try {
@@ -135,14 +163,15 @@ public class GamePlay {
 				if (roundHasEnded) break;
 
 				//Players all pass their selected cards to the player on their left (represented by incrementing 1 player up)
-				ArrayList<String> lastPlayerHand = players.get(players.size() - 1).getHand();
-				for (int p = players.size()-1; p >= 1; p--) {
-					Player currPlayer = players.get(p);
-					Player previous = players.get(p-1);
-					ArrayList<String> previousHand = previous.getHand();
-					currPlayer.updateHand(previousHand);
-				}
-				players.get(0).updateHand(lastPlayerHand);
+//				ArrayList<String> lastPlayerHand = players.get(players.size() - 1).getHand();
+//				for (int p = players.size()-1; p >= 1; p--) {
+//					Player currPlayer = players.get(p);
+//					Player previous = players.get(p-1);
+//					ArrayList<String> previousHand = previous.getHand();
+//					currPlayer.updateHand(previousHand);
+//				}
+//				players.get(0).updateHand(lastPlayerHand);
+				players = rotateHandCards(players);
 			}
 
 			//Update each player's score
@@ -168,6 +197,7 @@ public class GamePlay {
 			System.out.println("Player " + (i + 1) + "'s final score is: " + Integer.toString(players.get(i).getTotalPoints()));
 		}
 	}
+		
 
 	private static void initializeConstants() {
 		for (int i = 0; i < TEMPURA; i++)
@@ -587,5 +617,17 @@ public class GamePlay {
 			System.out.println(newHand.get(n));
 		}
 		System.out.println("================");
+	}
+	
+	private static ArrayList<Player> rotateHandCards(ArrayList<Player> playersList) {
+		ArrayList<String> lastPlayerHand = playersList.get(playersList.size() - 1).getHand();
+		for (int p = playersList.size()-1; p >= 1; p--) {
+			Player currPlayer = playersList.get(p);
+			Player previous = playersList.get(p-1);
+			ArrayList<String> previousHand = previous.getHand();
+			currPlayer.updateHand(previousHand);
+		}
+		playersList.get(0).updateHand(lastPlayerHand);
+		return playersList;
 	}
 }
