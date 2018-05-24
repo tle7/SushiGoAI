@@ -93,6 +93,10 @@ public class Player {
 		selectedCards.add(cardToAdd);
 	}
 	
+	public void removeSelectedCards(String cardToRemove) {
+		selectedCards.remove(cardToRemove);
+	}
+	
 	public ArrayList<String> getSelectedCards() {
 		return selectedCards;
 	}
