@@ -27,14 +27,14 @@ public class GamePlay {
 	//			"egg-nigiri", "pudding", "wasabi", "chopsticks"};
 	//	public static final Set<String> cardNamesSet = new HashSet<>(Arrays.asList(cardNamesArr));
 
-	private class ActionScore {
-		public String action;
-		public int score;
-		public ActionScore(String a, int i) {
-			action = a;
-			score = i;
-		}
-	}
+//	private class ActionScore {
+//		private String action;
+//		private int score;
+//		public ActionScore(String a, int i) {
+//			action = a;
+//			score = i;
+//		}
+//	}
 	//	public static final String[] cardNamesArr = new String[] {"tempura", "sashimi", "dumpling", "two-maki", "three-maki", "one-maki", "salmon-nigiri", "squid-nigiri",
 	//			"egg-nigiri", "pudding", "wasabi", "chopsticks"};
 	//	public static final Set<String> cardNamesSet = new HashSet<>(Arrays.asList(cardNamesArr));
@@ -465,12 +465,15 @@ public class GamePlay {
 		player.updateHand(cardsInHand);
 	}
 
-	private static ActionScore Vmaxmin(ArrayList<Player> allPlayers, int depth, int agentIndex) {
+	private static ScoreAction Vmaxmin(ArrayList<Player> allPlayers, int depth, int agentIndex) {
 		Player agent = allPlayers.get(agentIndex);
 		//TODO: need case if size of cards in hand is 1
-		if (agent.getCardsInHand().size() == 0) {
+		if (agent.getCardsInHand().size() == 0 || depth == 0) {
 			int currGameState = evaluationFunction(allPlayers);
-		} else if (depth == 0) {
+			ScoreAction retScoreAction = new ScoreAction();
+			retScoreAction.score = currGameState;
+			return retScoreAction;
+//		} else if (depth == 0) {
 			//Evaluation function
 		} else {
 			int nextDepth = depth;
@@ -480,7 +483,7 @@ public class GamePlay {
 				nextAgentIndex = 0;
 			}
 			ArrayList<String> possibleActions = agent.getCardsInHand();
-			ArrayList<ActionScore> allActionScores = new ArrayList<ActionScore>();
+			ArrayList<ScoreAction> allActionScores = new ArrayList<ScoreAction>();
 			for (int s = 0; s < possibleActions.size(); s++) {
 				Player copyPlayer = new Player(agent);
 				ArrayList<String> selectedCards = copyPlayer.getSelectedCards();
@@ -497,17 +500,19 @@ public class GamePlay {
 					else
 						currChoicePlayers.add(allPlayers.get(p));
 				}
-				ActionScore recurseActionScore = Vmaxmin(currChoicePlayers, nextDepth, nextAgentIndex);
-				ActionScore currActionScore = new ActionScore(currCard, recurseActionScore.score);
-				allActionScores.add(currActionScore);
+				ScoreAction recurseScoreAction = Vmaxmin(currChoicePlayers, nextDepth, nextAgentIndex);
+				ScoreAction currScoreAction = new ScoreAction();
+				currScoreAction.actions.add(currCard);
+				currScoreAction.score = recurseScoreAction.score;
+				allActionScores.add(currScoreAction);
 			}
 			
 			//get the optimal ActionScore
 			int bestScore = Integer.MIN_VALUE;
 			int worstScore = Integer.MAX_VALUE;
-			ActionScore optimalActionScore = null;
+			ScoreAction optimalActionScore = null;
 			for (int as = 0; as < allActionScores.size(); as++) {
-				ActionScore currActionScore = allActionScores.get(as);
+				ScoreAction currActionScore = allActionScores.get(as);
 				if (agentIndex == 0 && currActionScore.score > bestScore) {
 					bestScore = currActionScore.score;
 					optimalActionScore = currActionScore;
