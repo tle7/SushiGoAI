@@ -369,7 +369,6 @@ public class GamePlay {
 		currScore += ((numTempura / 2) * 5);
 		currScore += ((numSashimi / 3) * 10);
 		currScore += calcDumplingScore(numDumplings);
-
 		currScore += makiScore(currPlayer);
 		return currScore;
 	}
