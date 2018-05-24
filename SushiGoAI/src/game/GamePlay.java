@@ -25,6 +25,11 @@ public class GamePlay {
 //			"egg-nigiri", "pudding", "wasabi", "chopsticks"};
 //	public static final Set<String> cardNamesSet = new HashSet<>(Arrays.asList(cardNamesArr));
 	
+	public ActionScore(String a, int i) {
+		String action = a;
+		int points = i
+	}
+	
 	public static void main(String[] args) {
 		initializeConstants();
 		//Eventually, need to add a console prompt asking the user how many players are playing.
@@ -352,5 +357,34 @@ public class GamePlay {
 		cardsInHand.remove(input);
 		player.updateHand(cardsInHand);
 	}
+	
+	private static int Vmaxmin(ArrayList<Player> allPlayers, float depth, int agentIndex) {
+		Player agent = allPlayers.get(agentIndex);
+		if (agent.getCardsInHand().size() == 0) {
+			return agent.getTotalPoints();
+		} else if (depth == 0) {
+			//Evaluation function
+		} else {
+			ArrayList<String> possibleActions = agent.getCardsInHand();
+			if (agentIndex == 0) {
+				int minScore = Integer.MIN_VALUE;
+				String toReturn = "";
+				for (int s = 0; s < possibleActions.size(); s++) {
+					Player copyPlayer = new Player(agent);
+					ArrayList<String> selectedCards = copyPlayer.getSelectedCards();
+					ArrayList<String> handCards = copyPlayer.getCardsInHand();
+					String currCard = handCards.get(s);
+					selectedCards.add(currCard);
+					handCards.remove(currCard);
+					String nextAction = possibleActions.get(s);
+					
+				}
+					
+			}
+		}
+		return 0;
+	}
+	
+	
 }
 
