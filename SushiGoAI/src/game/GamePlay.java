@@ -533,6 +533,8 @@ public class GamePlay {
 					else
 						currChoicePlayers.add(allPlayers.get(p));
 				}
+				if (nextAgentIndex == 0)
+					currChoicePlayers = rotateHandCards(currChoicePlayers);
 				ScoreAction recurseScoreAction = Vmaxmin(currChoicePlayers, nextDepth, nextAgentIndex);
 				ScoreAction currScoreAction = new ScoreAction();
 				currScoreAction.actions.add(currCard);
@@ -566,6 +568,8 @@ public class GamePlay {
 							else
 								currChoicePlayers.add(allPlayers.get(p));
 						}
+						if (nextAgentIndex == 0)
+							currChoicePlayers = rotateHandCards(currChoicePlayers);
 						ScoreAction recurseScoreAction = Vmaxmin(currChoicePlayers, nextDepth, nextAgentIndex);
 						ScoreAction currScoreAction = new ScoreAction();
 						currScoreAction.actions.add(firstCard);
