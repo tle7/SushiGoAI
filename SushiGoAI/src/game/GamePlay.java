@@ -16,7 +16,7 @@ public class GamePlay {
 	private static final int WASABI = 6;
 	private static final int CHOPSTICKS = 4;
 	
-	private static final int NUM_TWO_PLAYER_CARDS = 10;
+	private static final int NUM_TWO_PLAYER_CARDS = 4;
 //	private static final int NUM_TWO_PLAYER_CARDS = 1;
 	
 	private static final ArrayList<String> deck = new ArrayList<String>();
@@ -147,7 +147,7 @@ public class GamePlay {
 			for (int n = 0; n < players.size(); n++) {
 				countScoreInHand(players.get(n).getSelectedCards(), players.get(n));
 			}
-			handleMakiScore();
+//			handleMakiScore();
 			
 			//Show each player's score at the end of the round and deal a new hand
 			for (int k = 0; k < players.size(); k++) {
@@ -165,6 +165,7 @@ public class GamePlay {
 			System.out.println("Player " + (i + 1) + "'s final score is: " + Integer.toString(players.get(i).getTotalPoints()));
 		}
 	}
+	
 	
 	private static void initializeConstants() {
 		for (int i = 0; i < TEMPURA; i++)
@@ -277,6 +278,7 @@ public class GamePlay {
 		//update number maki and number pudding and total score
 		currPlayer.setNumMaki(numMaki);
 		currPlayer.updateNumPuddings(numPudding);
+		currScore = getScore(currHand, currPlayer);
 		currPlayer.setRoundPoints(currScore);
 	}
 	
@@ -322,6 +324,117 @@ public class GamePlay {
 		}
 	}
 	
+	// get score without changing player properties
+	private static int getScore(ArrayList<String> currHand, Player currPlayer) {
+		int currScore = 0;
+		int numWasabi = 0;
+		int numTempura = 0;
+		int numSashimi = 0;
+		int numDumplings = 0;
+		int numMaki = 0;
+		int numPudding = 0;
+		for (String card: currHand) {
+			if(card.equals("tempura"))
+				numTempura++;
+			else if (card.equals("wasabi"))
+				numWasabi++;
+			else if (card.equals("dumpling"))
+				numDumplings++;
+			else if (card.equals("sashimi"))
+				numSashimi++;
+			else if (card.equals("one-maki"))
+				numMaki++;
+			else if (card.equals("two-maki"))
+				numMaki += 2;
+			else if (card.equals("three-maki"))
+				numMaki += 3;
+			else if (card.equals("pudding"))
+				numPudding++;
+			else if (card.equals("salmon-nigiri")) {
+				if (numWasabi > 0) {
+					currScore += 6;
+//					System.out.println("Score tripled!");
+					numWasabi--;
+				} else {
+					currScore += 2;
+				}
+			}
+			else if (card.equals("squid-nigiri")) {
+				if (numWasabi > 0) {
+					currScore += 9;
+					numWasabi--;
+//					System.out.println("Score tripled!");
+				} else {
+					currScore += 3;
+				}
+			}
+			else if (card.equals("egg-nigiri")) {
+				if (numWasabi > 0) {
+					currScore += 3;
+//					System.out.println("Score tripled!");
+					numWasabi--;
+				} else {
+					currScore += 1;
+				}
+			}	
+		}
+		
+		currScore += ((numTempura / 2) * 5);
+		currScore += ((numSashimi / 3) * 10);
+		currScore += calcDumplingScore(numDumplings);
+
+		currScore += makiScore(currPlayer);
+		return currScore;
+	}
+	
+	private static int makiScore(Player currPlayer) {
+		int score = 0;
+		int firstMostMaki = 0;
+		int numFirstPlayers = 0;
+		int secondMostMaki = 0;
+		int numSecondPlayers = 0;
+		
+		int numMakiCurrPlayer = 0;
+		for (Player player: players) {
+			int numMaki = 0;
+			for (String card: player.getSelectedCards()) {
+				if (card.equals("one-maki")) 
+					numMaki++;
+				else if (card.equals("two-maki"))
+					numMaki += 2;
+				else if (card.equals("three-maki"))
+					numMaki += 3;
+			}
+			if (numMaki > firstMostMaki) {
+				numFirstPlayers = 1;
+				firstMostMaki = numMaki;
+			} else if (numMaki == firstMostMaki) {
+				numFirstPlayers++;
+			} else if (numMaki > secondMostMaki) {
+				numSecondPlayers = 1;
+				secondMostMaki = numMaki;
+			} else if (numMaki == secondMostMaki) {
+				numSecondPlayers++;
+			} 
+			if (player == currPlayer) {
+				numMakiCurrPlayer = numMaki;
+			}
+		}
+		
+		if (numMakiCurrPlayer == firstMostMaki && numFirstPlayers != 0) {
+			score = 6/numFirstPlayers;
+		} else if (numFirstPlayers == 0) {
+			score = 6/players.size();
+		} else if (numMakiCurrPlayer == secondMostMaki && numSecondPlayers != 0) {
+			score = 3/numSecondPlayers;
+		} else if (numSecondPlayers == 0) {
+			score = 3/(players.size()-numFirstPlayers);
+		}
+		
+		return score;
+	}
+	
+	
 	private static void handlePuddingScore() {
 		Player firstPlace = players.get(0);
 		Player secondPlace = players.get(1);
@@ -352,5 +465,25 @@ public class GamePlay {
 		ArrayList<String> cardsInHand = player.getCardsInHand();
 		cardsInHand.remove(input);
 		player.updateHand(cardsInHand);
+	}
+	
+	private static int evaluationFunction(ArrayList <Player> copyPlayers, String action) {
+		// update hand based on action
+		Player AI = copyPlayers.get(1);
+		ArrayList <String> ai_cards = AI.getSelectedCards();
+		ai_cards.add(action);
+		
+		// calculate score of AI player's hand
+		int AIscore = getScore(ai_cards, AI);
+		
+		int difference = 0;
+		for (Player player: copyPlayers) {
+			int score = getScore(player.getSelectedCards(), player);
+			if (AIscore - score < difference) {
+				difference = AIscore - score;
+			}
+		}
+		
+		return difference;
 	}
 }
