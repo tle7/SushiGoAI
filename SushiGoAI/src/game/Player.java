@@ -9,6 +9,8 @@ public class Player {
 	private int totalPoints;
 	private int numPuddings;
 	private int currRoundNumMaki;
+	private int roundPoints;
+	private int numChopsticksSelected;
 	
 	public Player() {
 		selectedCards = new ArrayList<String>();
@@ -16,6 +18,8 @@ public class Player {
 		totalPoints = 0;
 		numPuddings = 0;
 		currRoundNumMaki = 0;
+		roundPoints = 0;
+		numChopsticksSelected = 0;
 	}
 	
 	Player (Player copyPlayer) {
@@ -48,6 +52,18 @@ public class Player {
 	
 	public int getTotalPoints() {
 		return totalPoints;
+	}
+	
+	public void setRoundPoints(int points) {
+		roundPoints = points;
+	}
+	
+	public void updateRoundPoints(int pointsToAdd) {
+		roundPoints += pointsToAdd;
+	}
+	
+	public int getRoundPoints() {
+		return roundPoints;
 	}
 	
 	public void updateNumPuddings(int puddingsToAdd) {
@@ -92,5 +108,25 @@ public class Player {
 	
 	public void resetSelectedCards() {
 		selectedCards.clear();
+	}
+	
+	public void incrementNumChopsticks() {
+		numChopsticksSelected++;
+	}
+	
+	public int getNumChopsticks() {
+		return numChopsticksSelected;
+	}
+	
+	public void moveChopsticksToHand() {
+		assert numChopsticksSelected > 0;
+		System.out.println("chopsticks moved to hand!");
+		selectedCards.remove("chopsticks");
+		numChopsticksSelected--;
+		cardsInHand.add("chopsticks");
+	}
+	
+	public void resetNumChopsticks() {
+		numChopsticksSelected = 0;
 	}
  }
