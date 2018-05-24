@@ -22,6 +22,11 @@ public class Player {
 		numChopsticksSelected = 0;
 	}
 	
+	//copy constructor
+	Player(Player toCopyPlayer) {
+		
+	}
+	
 	public void updateCards(String newCard) {
 		selectedCards.add(newCard);
 	}
