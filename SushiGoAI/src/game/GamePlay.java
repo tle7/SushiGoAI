@@ -27,10 +27,12 @@ public class GamePlay {
 	//			"egg-nigiri", "pudding", "wasabi", "chopsticks"};
 	//	public static final Set<String> cardNamesSet = new HashSet<>(Arrays.asList(cardNamesArr));
 
-	public class ActionScore {
+	private class ActionScore {
+		public String action;
+		public int score;
 		public ActionScore(String a, int i) {
-			String action = a;
-			int points = i;
+			action = a;
+			score = i;
 		}
 	}
 	//	public static final String[] cardNamesArr = new String[] {"tempura", "sashimi", "dumpling", "two-maki", "three-maki", "one-maki", "salmon-nigiri", "squid-nigiri",
@@ -466,9 +468,9 @@ public class GamePlay {
 
 	private static ActionScore Vmaxmin(ArrayList<Player> allPlayers, int depth, int agentIndex) {
 		Player agent = allPlayers.get(agentIndex);
+		//TODO: need case if size of cards in hand is 1
 		if (agent.getCardsInHand().size() == 0) {
-//			return agent.getTotalPoints();
-			//TODO: have proper rturn type
+			int currGameState = evaluationFunction(allPlayers);
 		} else if (depth == 0) {
 			//Evaluation function
 		} else {
@@ -496,23 +498,34 @@ public class GamePlay {
 					else
 						currChoicePlayers.add(allPlayers.get(p));
 				}
-				ActionScore currActionScore = Vmaxmin(currChoicePlayers, nextDepth, nextAgentIndex);
+				ActionScore recurseActionScore = Vmaxmin(currChoicePlayers, nextDepth, nextAgentIndex);
+				ActionScore currActionScore = new ActionScore(currCard, recurseActionScore.score);
 				allActionScores.add(currActionScore);
 			}
-			if (agentIndex == 0) {
-				int minScore = Integer.MIN_VALUE;
-				String toReturn = "";
-
+			
+			//get the optimal ActionScore
+			int bestScore = Integer.MIN_VALUE;
+			int worstScore = Integer.MAX_VALUE;
+			ActionScore optimalActionScore = null;
+			for (int as = 0; as < allActionScores.size(); as++) {
+				ActionScore currActionScore = allActionScores.get(as);
+				if (agentIndex == 0 && currActionScore.score > bestScore) {
+					bestScore = currActionScore.score;
+					optimalActionScore = currActionScore;
+				} else if (agentIndex > 0 && currActionScore.score < worstScore) {
+					worstScore = currActionScore.score;
+					optimalActionScore = currActionScore;
+				}
 			}
+			return optimalActionScore;
 		}
-		return null; //TODO: remove, here to have valid return type
 	}
 
-	private static int evaluationFunction(ArrayList <Player> copyPlayers, String action) {
+	private static int evaluationFunction(ArrayList <Player> copyPlayers) {
 		// update hand based on action
 		Player AI = copyPlayers.get(1);
 		ArrayList <String> ai_cards = AI.getSelectedCards();
-		ai_cards.add(action);
+//		ai_cards.add(action);
 
 		// calculate score of AI player's hand
 		int AIscore = getScore(ai_cards, AI);
