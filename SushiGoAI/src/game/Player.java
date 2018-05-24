@@ -22,6 +22,25 @@ public class Player {
 		numChopsticksSelected = 0;
 	}
 	
+	//copy constructor
+	Player (Player copyPlayer) {
+		totalPoints = copyPlayer.getTotalPoints();
+		numPuddings = copyPlayer.getNumPuddings();
+		currRoundNumMaki = copyPlayer.getNumMaki();
+		roundPoints = copyPlayer.getRoundPoints();
+		numChopsticksSelected = copyPlayer.getNumChopsticks();
+		cardsInHand = new ArrayList<String>();
+		selectedCards = new ArrayList<String>();
+		ArrayList<String> copyHand = copyPlayer.getCardsInHand();
+		ArrayList<String> copySelected = copyPlayer.getSelectedCards();
+		for (int i = 0; i < copyHand.size(); i++) {
+			cardsInHand.add(copyHand.get(i));
+		}
+		for (int i = 0; i < copySelected.size(); i++) {
+			selectedCards.add(copySelected.get(i));
+		}
+	}
+	
 	public void updateCards(String newCard) {
 		selectedCards.add(newCard);
 	}
