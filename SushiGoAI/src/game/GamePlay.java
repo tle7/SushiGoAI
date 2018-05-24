@@ -15,9 +15,9 @@ public class GamePlay {
 	private static final int PUDDING = 10;
 	private static final int WASABI = 6;
 	private static final int CHOPSTICKS = 4;
-	
-//	private static final int NUM_TWO_PLAYER_CARDS = 1;
-	
+
+	//	private static final int NUM_TWO_PLAYER_CARDS = 1;
+
 	private static final int NUM_TWO_PLAYER_CARDS = 4;
 	private static Scanner scanner;
 
@@ -27,7 +27,17 @@ public class GamePlay {
 	//			"egg-nigiri", "pudding", "wasabi", "chopsticks"};
 	//	public static final Set<String> cardNamesSet = new HashSet<>(Arrays.asList(cardNamesArr));
 
-	public static void main(String[] args) {
+	public class ActionScore {
+		public ActionScore(String a, int i) {
+			String action = a;
+			int points = i;
+		}
+	}
+	//	public static final String[] cardNamesArr = new String[] {"tempura", "sashimi", "dumpling", "two-maki", "three-maki", "one-maki", "salmon-nigiri", "squid-nigiri",
+	//			"egg-nigiri", "pudding", "wasabi", "chopsticks"};
+	//	public static final Set<String> cardNamesSet = new HashSet<>(Arrays.asList(cardNamesArr));
+
+		public static void main(String[] args) {
 		initializeConstants();
 		//Eventually, need to add a console prompt asking the user how many players are playing.
 		initializePlayers(2);
@@ -137,7 +147,7 @@ public class GamePlay {
 			for (int n = 0; n < players.size(); n++) {
 				countScoreInHand(players.get(n).getSelectedCards(), players.get(n));
 			}
-//			handleMakiScore();
+			//			handleMakiScore();
 
 			//Show each player's score at the end of the round and deal a new hand
 			for (int k = 0; k < players.size(); k++) {
@@ -310,7 +320,7 @@ public class GamePlay {
 			secondPlace.updateRoundPoints(3);
 		}
 	}
-	
+
 	// get score without changing player properties
 	private static int getScore(ArrayList<String> currHand, Player currPlayer) {
 		int currScore = 0;
@@ -340,7 +350,7 @@ public class GamePlay {
 			else if (card.equals("salmon-nigiri")) {
 				if (numWasabi > 0) {
 					currScore += 6;
-//					System.out.println("Score tripled!");
+					//					System.out.println("Score tripled!");
 					numWasabi--;
 				} else {
 					currScore += 2;
@@ -350,7 +360,7 @@ public class GamePlay {
 				if (numWasabi > 0) {
 					currScore += 9;
 					numWasabi--;
-//					System.out.println("Score tripled!");
+					//					System.out.println("Score tripled!");
 				} else {
 					currScore += 3;
 				}
@@ -358,14 +368,14 @@ public class GamePlay {
 			else if (card.equals("egg-nigiri")) {
 				if (numWasabi > 0) {
 					currScore += 3;
-//					System.out.println("Score tripled!");
+					//					System.out.println("Score tripled!");
 					numWasabi--;
 				} else {
 					currScore += 1;
 				}
 			}	
 		}
-		
+
 		currScore += ((numTempura / 2) * 5);
 		currScore += ((numSashimi / 3) * 10);
 		currScore += calcDumplingScore(numDumplings);
@@ -373,14 +383,14 @@ public class GamePlay {
 		currScore += makiScore(currPlayer);
 		return currScore;
 	}
-	
+
 	private static int makiScore(Player currPlayer) {
 		int score = 0;
 		int firstMostMaki = 0;
 		int numFirstPlayers = 0;
 		int secondMostMaki = 0;
 		int numSecondPlayers = 0;
-		
+
 		int numMakiCurrPlayer = 0;
 		for (Player player: players) {
 			int numMaki = 0;
@@ -407,7 +417,7 @@ public class GamePlay {
 				numMakiCurrPlayer = numMaki;
 			}
 		}
-		
+
 		if (numMakiCurrPlayer == firstMostMaki && numFirstPlayers != 0) {
 			score = 6/numFirstPlayers;
 		} else if (numFirstPlayers == 0) {
@@ -417,11 +427,11 @@ public class GamePlay {
 		} else if (numSecondPlayers == 0) {
 			score = 3/(players.size()-numFirstPlayers);
 		}
-		
+
 		return score;
 	}
-	
-	
+
+
 	private static void handlePuddingScore() {
 		Player firstPlace = players.get(0);
 		Player secondPlace = players.get(1);
@@ -453,16 +463,60 @@ public class GamePlay {
 		cardsInHand.remove(input);
 		player.updateHand(cardsInHand);
 	}
-	
+
+	private static ActionScore Vmaxmin(ArrayList<Player> allPlayers, int depth, int agentIndex) {
+		Player agent = allPlayers.get(agentIndex);
+		if (agent.getCardsInHand().size() == 0) {
+//			return agent.getTotalPoints();
+			//TODO: have proper rturn type
+		} else if (depth == 0) {
+			//Evaluation function
+		} else {
+			int nextDepth = depth;
+			int nextAgentIndex = agentIndex + 1;
+			if (agentIndex == allPlayers.size() - 1) {
+				nextDepth = depth - 1;
+				nextAgentIndex = 0;
+			}
+			ArrayList<String> possibleActions = agent.getCardsInHand();
+			ArrayList<ActionScore> allActionScores = new ArrayList<ActionScore>();
+			for (int s = 0; s < possibleActions.size(); s++) {
+				Player copyPlayer = new Player(agent);
+				ArrayList<String> selectedCards = copyPlayer.getSelectedCards();
+				ArrayList<String> handCards = copyPlayer.getCardsInHand();
+				String currCard = handCards.get(s);
+				selectedCards.add(currCard);
+				handCards.remove(currCard);
+				
+				//form player array for next iteration
+				ArrayList<Player> currChoicePlayers = new ArrayList<Player>();
+				for (int p = 0; p < allPlayers.size(); p++) {
+					if (p == agentIndex)
+						currChoicePlayers.add(copyPlayer);
+					else
+						currChoicePlayers.add(allPlayers.get(p));
+				}
+				ActionScore currActionScore = Vmaxmin(currChoicePlayers, nextDepth, nextAgentIndex);
+				allActionScores.add(currActionScore);
+			}
+			if (agentIndex == 0) {
+				int minScore = Integer.MIN_VALUE;
+				String toReturn = "";
+
+			}
+		}
+		return null; //TODO: remove, here to have valid return type
+	}
+
 	private static int evaluationFunction(ArrayList <Player> copyPlayers, String action) {
 		// update hand based on action
 		Player AI = copyPlayers.get(1);
 		ArrayList <String> ai_cards = AI.getSelectedCards();
 		ai_cards.add(action);
-		
+
 		// calculate score of AI player's hand
 		int AIscore = getScore(ai_cards, AI);
-		
+
 		int difference = 0;
 		for (Player player: copyPlayers) {
 			int score = getScore(player.getSelectedCards(), player);
