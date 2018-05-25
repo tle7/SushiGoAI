@@ -107,6 +107,17 @@ public class GamePlay {
 						for (int playerId = 0; playerId < players.size(); playerId++) {
 							copyPlayers.add(new Player(players.get(playerId)));
 						}
+//						for (int k = 0; k < copyPlayers.size(); k++) {
+////							copyPlayers.get(k).updateCards("hello there");
+//							ArrayList<String> testHand = new ArrayList<String>();
+//							testHand.add("ok");
+//							copyPlayers.get(k).updateHand(testHand);
+////							ArrayList<String> actualPlayerHand = players.get(k).getSelectedCards();
+//							ArrayList<String> actualPlayerHand = players.get(k).getCardsInHand();
+//							System.out.println("The actual player's hand cards are:");
+//							for (int checkInd = 0; checkInd < actualPlayerHand.size(); checkInd++)
+//								System.out.println(actualPlayerHand.get(checkInd));
+//						}
 						ScoreAction optimalScoreAction = Vmaxmin(copyPlayers, 2, 0);
 						ArrayList<String> currPlayerHand = currPlayer.getCardsInHand();
 						for (int numAct = 0; numAct < optimalScoreAction.actions.size(); numAct++) {
