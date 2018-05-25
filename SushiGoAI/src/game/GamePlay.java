@@ -109,44 +109,14 @@ public class GamePlay {
 						}
 						ScoreAction optimalScoreAction = Vmaxmin(copyPlayers, 2, 0);
 						ArrayList<String> currPlayerHand = currPlayer.getCardsInHand();
-						for (String optActionCard: optimalScoreAction.actions) {
+						for (int numAct = 0; numAct < optimalScoreAction.actions.size(); numAct++) {
+							String optActionCard = optimalScoreAction.actions.get(numAct);
+							handleHandUpdates(currPlayer, optActionCard, (numAct == 1));
 							currPlayer.updateCards(optActionCard);
 							currPlayerHand.remove(optActionCard);
 						}
 						currPlayer.updateHand(currPlayerHand);
-						//						boolean haveChopsticks = currPlayer.getNumChopsticks() > 0;
-//						for (int playerCard = 0; playerCard < numCardSelections; playerCard++) {
-//							String currCard = handlePlayerCardSelection(currPlayer, (playerCard == 1) ? true : false);
-//							if (currCard != null)
-//								handleHandUpdates(currPlayer, currCard, (playerCard == 1) ? true : false);
-//						}
 					} else {
-//						ArrayList<String> hand = currPlayer.getHand();
-//						Random rand = new Random();
-//						for (int cpuCard = 0; cpuCard < numCardSelections; cpuCard++) {
-//							int randIndex = rand.nextInt(hand.size());
-//							//						cardToKeep = hand.get(randIndex);
-//							String cpuKeptCard = hand.get(randIndex);
-//							handleHandUpdates(currPlayer, cpuKeptCard, (cpuCard == 1) ? true : false);
-//							//							keptCardsList.add(hand.get(randIndex));
-//							System.out.println("Choose a card to keep: " + cpuKeptCard);
-//							try {
-//								Thread.sleep(2000);
-//							} catch (InterruptedException e) {
-//								e.printStackTrace();
-//							}
-//						}
-//						ArrayList<Player> copyPlayers = new ArrayList<Player>();
-//						for (int playerId = 0; playerId < players.size(); playerId++) {
-//							copyPlayers.add(new Player(players.get(playerId)));
-//						}
-//						ScoreAction optimalScoreAction = Vmaxmin(copyPlayers, 2, 0);
-//						ArrayList<String> currPlayerHand = currPlayer.getCardsInHand();
-//						for (String optActionCard: optimalScoreAction.actions) {
-//							currPlayer.updateCards(optActionCard);
-//							currPlayerHand.remove(optActionCard);
-//						}
-//						currPlayer.updateHand(currPlayerHand);
 						for (int playerCard = 0; playerCard < numCardSelections; playerCard++) {
 							String currCard = handlePlayerCardSelection(currPlayer, (playerCard == 1) ? true : false);
 							if (currCard != null)
@@ -162,15 +132,6 @@ public class GamePlay {
 
 				if (roundHasEnded) break;
 
-				//Players all pass their selected cards to the player on their left (represented by incrementing 1 player up)
-//				ArrayList<String> lastPlayerHand = players.get(players.size() - 1).getHand();
-//				for (int p = players.size()-1; p >= 1; p--) {
-//					Player currPlayer = players.get(p);
-//					Player previous = players.get(p-1);
-//					ArrayList<String> previousHand = previous.getHand();
-//					currPlayer.updateHand(previousHand);
-//				}
-//				players.get(0).updateHand(lastPlayerHand);
 				players = rotateHandCards(players);
 			}
 
@@ -645,7 +606,6 @@ public class GamePlay {
 		player.updateSelectedCards(cardToKeep);
 		if (cardToKeep.equals("chopsticks"))
 			player.incrementNumChopsticks();
-		System.out.println("card removed " + cardToKeep);
 		newHand.remove(cardToKeep);
 		if (selectingSecondCard) //using chopsticks
 			player.moveChopsticksToHand();
