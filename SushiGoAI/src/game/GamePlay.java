@@ -18,7 +18,7 @@ public class GamePlay {
 
 	//	private static final int NUM_TWO_PLAYER_CARDS = 1;
 
-	private static final int NUM_TWO_PLAYER_CARDS = 4;
+	private static final int NUM_TWO_PLAYER_CARDS = 10;
 	private static Scanner scanner;
 
 	private static final ArrayList<String> deck = new ArrayList<String>();
