@@ -16,13 +16,19 @@ public class GamePlay {
 	private static final int WASABI = 6;
 	private static final int CHOPSTICKS = 4;
 
-	//	private static final int NUM_TWO_PLAYER_CARDS = 1;
+//	private static final int NUM_TWO_PLAYER_CARDS = 5;
 
 	private static final int NUM_TWO_PLAYER_CARDS = 10;
+	
+	private static final int INIT_DEPTH = 5;
+	private static final int AGENT_ID = 0;
 	private static Scanner scanner;
 
 	private static final ArrayList<String> deck = new ArrayList<String>();
 	private static ArrayList<Player> players = new ArrayList<Player>();
+	
+	private static int globalAlphaBetaCounter = 0;
+	
 	//	public static final String[] cardNamesArr = new String[] {"tempura", "sashimi", "dumpling", "two-maki", "three-maki", "one-maki", "salmon-nigiri", "squid-nigiri",
 	//			"egg-nigiri", "pudding", "wasabi", "chopsticks"};
 	//	public static final Set<String> cardNamesSet = new HashSet<>(Arrays.asList(cardNamesArr));
@@ -107,6 +113,7 @@ public class GamePlay {
 						for (int playerId = 0; playerId < players.size(); playerId++) {
 							copyPlayers.add(new Player(players.get(playerId)));
 						}
+
 //						for (int k = 0; k < copyPlayers.size(); k++) {
 ////							copyPlayers.get(k).updateCards("hello there");
 //							ArrayList<String> testHand = new ArrayList<String>();
@@ -118,13 +125,14 @@ public class GamePlay {
 //							for (int checkInd = 0; checkInd < actualPlayerHand.size(); checkInd++)
 //								System.out.println(actualPlayerHand.get(checkInd));
 //						}
-						ScoreAction optimalScoreAction = Vmaxmin(copyPlayers, 3, 0);
+						ScoreAction optimalScoreAction = Vmaxmin(copyPlayers, INIT_DEPTH, AGENT_ID, 
+																Integer.MIN_VALUE, Integer.MAX_VALUE);
+						System.out.println("number states explored: " + Integer.toString(globalAlphaBetaCounter));
+						System.out.println("number of actions selected is: " + Integer.toString(optimalScoreAction.actions.size()));
 						ArrayList<String> currPlayerHand = currPlayer.getCardsInHand();
 						for (int numAct = 0; numAct < optimalScoreAction.actions.size(); numAct++) {
 							String optActionCard = optimalScoreAction.actions.get(numAct);
 							handleHandUpdates(currPlayer, optActionCard, (numAct == 1));
-//							currPlayer.updateCards(optActionCard);
-//							currPlayerHand.remove(optActionCard);
 						}
 						currPlayer.updateHand(currPlayerHand);
 					} else {
@@ -350,16 +358,18 @@ public class GamePlay {
 		player.updateHand(cardsInHand);
 	}
 
-	private static ScoreAction Vmaxmin(ArrayList<Player> allPlayers, int depth, int agentIndex) {
+	private static ScoreAction Vmaxmin(ArrayList<Player> allPlayers, int depth, int agentIndex,
+			int alpha, int beta) {
 		Player agent = allPlayers.get(agentIndex);
-		//TODO: need case if size of cards in hand is 1
+		int bestScore = Integer.MIN_VALUE;
+		int worstScore = Integer.MAX_VALUE;
+		ScoreAction optimalActionScore = null;
+		
 		if (agent.getCardsInHand().size() == 0 || depth == 0) {
 			int currGameState = evaluationFunction(allPlayers);
 			ScoreAction retScoreAction = new ScoreAction();
 			retScoreAction.score = currGameState;
 			return retScoreAction;
-//		} else if (depth == 0) {
-			//Evaluation function
 		} else {
 			int nextDepth = depth;
 			int nextAgentIndex = agentIndex + 1;
@@ -368,10 +378,11 @@ public class GamePlay {
 				nextAgentIndex = 0;
 			}
 			ArrayList<String> possibleActions = agent.getCardsInHand();
-			ArrayList<ScoreAction> allActionScores = new ArrayList<ScoreAction>();
+//			ArrayList<ScoreAction> allActionScores = new ArrayList<ScoreAction>();
+			boolean chopsticksExplore = true;
 			for (int s = 0; s < possibleActions.size(); s++) {
 				Player copyPlayer = new Player(agent);
-				ArrayList<String> selectedCards = copyPlayer.getSelectedCards();
+//				ArrayList<String> selectedCards = copyPlayer.getSelectedCards();
 				ArrayList<String> handCards = copyPlayer.getCardsInHand();
 				String currCard = handCards.get(s);
 				if (currCard.equals("chopsticks")) {
@@ -391,14 +402,41 @@ public class GamePlay {
 				}
 				if (nextAgentIndex == 0)
 					currChoicePlayers = rotateHandCards(currChoicePlayers);
-				ScoreAction recurseScoreAction = Vmaxmin(currChoicePlayers, nextDepth, nextAgentIndex);
+				ScoreAction recurseScoreAction = Vmaxmin(currChoicePlayers, nextDepth, nextAgentIndex, 
+														 alpha, beta);
 				ScoreAction currScoreAction = new ScoreAction();
 				currScoreAction.actions.add(currCard);
 				currScoreAction.score = recurseScoreAction.score;
-				allActionScores.add(currScoreAction);
+				if (agentIndex == 0) {
+					if (recurseScoreAction.score > bestScore) {
+						bestScore = recurseScoreAction.score;
+						optimalActionScore = currScoreAction;
+					}
+					if (recurseScoreAction.score > alpha) {
+						alpha = recurseScoreAction.score;
+					}
+					if (beta <= alpha) {
+						chopsticksExplore = false;
+						break;
+					}
+					
+				} else {
+					if (recurseScoreAction.score < worstScore) {
+						worstScore = recurseScoreAction.score;
+						optimalActionScore = currScoreAction;
+					}
+					
+					if (recurseScoreAction.score < beta) {
+						beta = recurseScoreAction.score;
+					}
+					if (beta <= alpha) {
+						chopsticksExplore = false;
+						break;
+					}
+				}
 			}
 			
-			if (agent.getNumChopsticks() > 0) {
+			if (chopsticksExplore && (agent.getNumChopsticks() > 0)) {
 				for (int i = 0; i < agent.getCardsInHand().size()-1; i++) {
 					for (int j = i+1; j < agent.getCardsInHand().size(); j++) {
 						Player copyPlayer = new Player(agent);
@@ -428,31 +466,59 @@ public class GamePlay {
 						}
 						if (nextAgentIndex == 0)
 							currChoicePlayers = rotateHandCards(currChoicePlayers);
-						ScoreAction recurseScoreAction = Vmaxmin(currChoicePlayers, nextDepth, nextAgentIndex);
+						ScoreAction recurseScoreAction = Vmaxmin(currChoicePlayers, nextDepth, nextAgentIndex,
+																  alpha, beta);
 						ScoreAction currScoreAction = new ScoreAction();
 						currScoreAction.actions.add(firstCard);
 						currScoreAction.actions.add(secondCard);
 						currScoreAction.score = recurseScoreAction.score;
-						allActionScores.add(currScoreAction);
+//						allActionScores.add(currScoreAction);
+						if (agentIndex == 0) {
+							if (recurseScoreAction.score > bestScore) {
+								bestScore = recurseScoreAction.score;
+								optimalActionScore = currScoreAction;
+							}
+							if (recurseScoreAction.score > alpha)
+								alpha = recurseScoreAction.score;
+							if (beta <= alpha)
+								break;
+							
+						} else {
+							if (recurseScoreAction.score < worstScore) {
+								worstScore = recurseScoreAction.score;
+								optimalActionScore = currScoreAction;
+							}
+							if (recurseScoreAction.score < worstScore) 
+								beta = recurseScoreAction.score;
+							if (beta <= alpha) 
+								break;
+						}
+//						ScoreAction currScoreAction = new ScoreAction();
+//						currScoreAction.actions.add(firstCard);
+//						currScoreAction.actions.add(secondCard);
+//						currScoreAction.score = recurseScoreAction.score;
+//						allActionScores.add(currScoreAction);
 					}
 				}
 				
 			}
 			
 			//get the optimal ActionScore
-			int bestScore = Integer.MIN_VALUE;
-			int worstScore = Integer.MAX_VALUE;
-			ScoreAction optimalActionScore = null;
-			for (int as = 0; as < allActionScores.size(); as++) {
-				ScoreAction currActionScore = allActionScores.get(as);
-				if (agentIndex == 0 && currActionScore.score > bestScore) {
-					bestScore = currActionScore.score;
-					optimalActionScore = currActionScore;
-				} else if (agentIndex > 0 && currActionScore.score < worstScore) {
-					worstScore = currActionScore.score;
-					optimalActionScore = currActionScore;
-				}
-			}
+//			int bestScore = Integer.MIN_VALUE;
+//			int worstScore = Integer.MAX_VALUE;
+//			ScoreAction optimalActionScore = null;
+//			for (int as = 0; as < allActionScores.size(); as++) {
+//				ScoreAction currActionScore = allActionScores.get(as);
+//				if (agentIndex == 0 && currActionScore.score > bestScore) {
+//					bestScore = currActionScore.score;
+//					optimalActionScore = currActionScore;
+//				} else if (agentIndex > 0 && currActionScore.score < worstScore) {
+//					worstScore = currActionScore.score;
+//					optimalActionScore = currActionScore;
+//				}
+//			}
+//			System.out.println("num Vmaxmin so far: " + Integer.toString(globalAlphaBetaCounter));
+			globalAlphaBetaCounter++;
 			return optimalActionScore;
 		}
 	}
