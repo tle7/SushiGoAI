@@ -118,7 +118,7 @@ public class GamePlay {
 //							for (int checkInd = 0; checkInd < actualPlayerHand.size(); checkInd++)
 //								System.out.println(actualPlayerHand.get(checkInd));
 //						}
-						ScoreAction optimalScoreAction = Vmaxmin(copyPlayers, 2, 0);
+						ScoreAction optimalScoreAction = Vmaxmin(copyPlayers, 3, 0);
 						ArrayList<String> currPlayerHand = currPlayer.getCardsInHand();
 						for (int numAct = 0; numAct < optimalScoreAction.actions.size(); numAct++) {
 							String optActionCard = optimalScoreAction.actions.get(numAct);
@@ -148,19 +148,20 @@ public class GamePlay {
 
 			//Update each player's score
 			for (int n = 0; n < players.size(); n++) {
-				countScoreInHand(players.get(n).getSelectedCards(), players.get(n));
+//				countScoreInHand(players.get(n).getSelectedCards(), players.get(n));
+				getScore(players.get(n).getSelectedCards(), players.get(n), players);
 			}
 			//			handleMakiScore();
 
 			//Show each player's score at the end of the round and deal a new hand
 			for (int k = 0; k < players.size(); k++) {
 				Player currPlayer = players.get(k);
-				currPlayer.resetNumMaki();
+				currPlayer.resetRoundCards();
 				currPlayer.resetSelectedCards();
 				currPlayer.updateTotalPoints(currPlayer.getRoundPoints());
 				System.out.println("Round " + (r+1) + " Score for player " + (k + 1) + ": ");
 				System.out.println(players.get(k).getRoundPoints());
-				currPlayer.resetNumChopsticks();
+				currPlayer.setRoundPoints(0);
 			}
 		}
 		System.out.println("Game is over");
@@ -222,65 +223,8 @@ public class GamePlay {
 	}
 
 	private static void countScoreInHand(ArrayList<String> currHand, Player currPlayer) {
-		int currScore = 0;
-		int numWasabi = 0;
-		int numTempura = 0;
-		int numSashimi = 0;
-		int numDumplings = 0;
-		int numMaki = 0;
-		int numPudding = 0;
-		for (String card: currHand) {
-			if(card.equals("tempura"))
-				numTempura++;
-			else if (card.equals("wasabi"))
-				numWasabi++;
-			else if (card.equals("dumpling"))
-				numDumplings++;
-			else if (card.equals("sashimi"))
-				numSashimi++;
-			else if (card.equals("one-maki"))
-				numMaki++;
-			else if (card.equals("two-maki"))
-				numMaki += 2;
-			else if (card.equals("three-maki"))
-				numMaki += 3;
-			else if (card.equals("pudding"))
-				numPudding++;
-			else if (card.equals("salmon-nigiri")) {
-				if (numWasabi > 0) {
-					currScore += 6;
-					numWasabi--;
-				} else {
-					currScore += 2;
-				}
-			}
-			else if (card.equals("squid-nigiri")) {
-				if (numWasabi > 0) {
-					currScore += 9;
-					numWasabi--;
-				} else {
-					currScore += 3;
-				}
-			}
-			else if (card.equals("egg-nigiri")) {
-				if (numWasabi > 0) {
-					currScore += 3;
-					numWasabi--;
-				} else {
-					currScore += 1;
-				}
-			}	
-		}
-
-		currScore += ((numTempura / 2) * 5);
-		currScore += ((numSashimi / 3) * 10);
-		currScore += calcDumplingScore(numDumplings);
-
-		//update number maki and number pudding and total score
-		currPlayer.setNumMaki(numMaki);
-		currPlayer.updateNumPuddings(numPudding);
-		currScore = getScore(currHand, currPlayer, players);
-		currPlayer.setRoundPoints(currScore);
+		getScore(currHand, currPlayer, players);
+//		currPlayer.setRoundPoints(currScore);
 	}
 
 	private static int calcDumplingScore (int numDumplings) {
@@ -325,66 +269,16 @@ public class GamePlay {
 		}
 	}
 
-	// get score without changing player properties
+	// get score based on num of each card in player class
 	private static int getScore(ArrayList<String> currHand, Player currPlayer, ArrayList<Player> allPlayers) {
 		int currScore = 0;
-		int numWasabi = 0;
-		int numTempura = 0;
-		int numSashimi = 0;
-		int numDumplings = 0;
-		int numMaki = 0;
-		int numPudding = 0;
-		for (String card: currHand) {
-			if(card.equals("tempura"))
-				numTempura++;
-			else if (card.equals("wasabi"))
-				numWasabi++;
-			else if (card.equals("dumpling"))
-				numDumplings++;
-			else if (card.equals("sashimi"))
-				numSashimi++;
-			else if (card.equals("one-maki"))
-				numMaki++;
-			else if (card.equals("two-maki"))
-				numMaki += 2;
-			else if (card.equals("three-maki"))
-				numMaki += 3;
-			else if (card.equals("pudding"))
-				numPudding++;
-			else if (card.equals("salmon-nigiri")) {
-				if (numWasabi > 0) {
-					currScore += 6;
-					//					System.out.println("Score tripled!");
-					numWasabi--;
-				} else {
-					currScore += 2;
-				}
-			}
-			else if (card.equals("squid-nigiri")) {
-				if (numWasabi > 0) {
-					currScore += 9;
-					numWasabi--;
-					//					System.out.println("Score tripled!");
-				} else {
-					currScore += 3;
-				}
-			}
-			else if (card.equals("egg-nigiri")) {
-				if (numWasabi > 0) {
-					currScore += 3;
-					//					System.out.println("Score tripled!");
-					numWasabi--;
-				} else {
-					currScore += 1;
-				}
-			}	
-		}
 
-		currScore += ((numTempura / 2) * 5);
-		currScore += ((numSashimi / 3) * 10);
-		currScore += calcDumplingScore(numDumplings);
+		currScore += ((currPlayer.getNumTempura() / 2) * 5);
+		currScore += ((currPlayer.getNumSashimi() / 3) * 10);
+		currScore += calcDumplingScore(currPlayer.getNumDumpling());
 		currScore += makiScore(currPlayer, allPlayers);
-		return currScore;
+		currPlayer.updateRoundPoints(currScore);
+		return currPlayer.getRoundPoints();
 	}
 
 	private static int makiScore(Player currPlayer, ArrayList<Player> allPlayers) {
@@ -394,17 +288,10 @@ public class GamePlay {
 		int secondMostMaki = 0;
 		int numSecondPlayers = 0;
 
-		int numMakiCurrPlayer = 0;
+		int numMakiCurrPlayer = currPlayer.getNumMaki();
 		for (Player player: allPlayers) {
-			int numMaki = 0;
-			for (String card: player.getSelectedCards()) {
-				if (card.equals("one-maki")) 
-					numMaki++;
-				else if (card.equals("two-maki"))
-					numMaki += 2;
-				else if (card.equals("three-maki"))
-					numMaki += 3;
-			}
+			int numMaki = player.getNumMaki();
+			
 			if (numMaki > firstMostMaki) {
 				numFirstPlayers = 1;
 				firstMostMaki = numMaki;
@@ -416,9 +303,6 @@ public class GamePlay {
 			} else if (numMaki == secondMostMaki) {
 				numSecondPlayers++;
 			} 
-			if (player == currPlayer) {
-				numMakiCurrPlayer = numMaki;
-			}
 		}
 
 		if (numMakiCurrPlayer == firstMostMaki && numFirstPlayers != 0) {
@@ -430,7 +314,6 @@ public class GamePlay {
 		} else if (numSecondPlayers == 0) {
 			score = 3/(players.size()-numFirstPlayers);
 		}
-
 		return score;
 	}
 
@@ -496,6 +379,7 @@ public class GamePlay {
 				}
 				copyPlayer.updateSelectedCards(currCard);
 				copyPlayer.removeSelectedCards(currCard);
+				updatePlayerHand(copyPlayer, currCard);
 				
 				//form player array for next iteration
 				ArrayList<Player> currChoicePlayers = new ArrayList<Player>();
@@ -528,9 +412,11 @@ public class GamePlay {
 						}
 						copyPlayer.updateSelectedCards(firstCard);
 						copyPlayer.removeSelectedCards(firstCard);
+						updatePlayerHand(copyPlayer, firstCard);
 						copyPlayer.updateSelectedCards(secondCard);
 						copyPlayer.removeSelectedCards(secondCard);
 						copyPlayer.moveChopsticksToHand();
+						updatePlayerHand(copyPlayer, secondCard);
 						
 						//form player array for next iteration
 						ArrayList<Player> currChoicePlayers = new ArrayList<Player>();
@@ -615,8 +501,7 @@ public class GamePlay {
 	private static void handleHandUpdates (Player player, String cardToKeep, boolean selectingSecondCard) {
 		ArrayList<String> newHand = player.getHand();
 		player.updateSelectedCards(cardToKeep);
-		if (cardToKeep.equals("chopsticks"))
-			player.incrementNumChopsticks();
+		updatePlayerHand(player, cardToKeep);
 		newHand.remove(cardToKeep);
 		if (selectingSecondCard) //using chopsticks
 			player.moveChopsticksToHand();
@@ -643,5 +528,42 @@ public class GamePlay {
 		}
 		playersList.get(0).updateHand(lastPlayerHand);
 		return playersList;
+	}
+	
+	private static void updatePlayerHand(Player player, String card) {
+		if (card.equals("chopsticks"))
+			player.incrementNumChopsticks();
+		else if (card.equals("tempura"))
+			player.incrementNumTempura();
+		else if (card.equals("wasabi"))
+			player.incrementNumWasabi();
+		else if (card.equals("dumpling"))
+			player.incrementNumDumplings();
+		else if (card.equals("sashimi"))
+			player.incrementNumSashimi();
+		else if (card.equals("one-maki"))
+			player.incrementNumMaki(1);
+		else if (card.equals("two-maki"))
+			player.incrementNumMaki(2);
+		else if (card.equals("three-maki"))
+			player.incrementNumMaki(3);
+		else if (card.equals("pudding"))
+				player.incrementNumPudding();
+		else if (card.equals("salmon-nigiri")) {
+			if (player.getNumWasabi() > 0) {
+				player.updateRoundPoints(6);
+				player.decrementNumWasabi();
+			} else player.updateRoundPoints(2);
+		} else if (card.equals("squid-nigiri")) {
+			if (player.getNumWasabi() > 0) {
+				player.updateRoundPoints(9);
+				player.decrementNumWasabi();
+			} else player.updateRoundPoints(3);
+		} else if (card.equals("egg-nigiri")) {
+			if (player.getNumWasabi() > 0) {
+				player.updateRoundPoints(3);
+				player.decrementNumWasabi();
+			} else player.updateRoundPoints(1);
+		}
 	}
 }

@@ -11,6 +11,10 @@ public class Player {
 	private int currRoundNumMaki;
 	private int roundPoints;
 	private int numChopsticksSelected;
+	private int numTempura;
+	private int numWasabi;
+	private int numDumplings;
+	private int numSashimi;
 	
 	public Player() {
 		selectedCards = new ArrayList<String>();
@@ -105,8 +109,13 @@ public class Player {
 		currRoundNumMaki = numMaki;
 	}
 	
-	public void resetNumMaki() {
+	public void resetRoundCards() {
 		currRoundNumMaki = 0;
+		numTempura = 0;
+		numWasabi = 0;
+		numChopsticksSelected = 0;
+		numDumplings = 0;
+		numSashimi = 0;
 	}
 	
 	public int getNumMaki() {
@@ -117,8 +126,52 @@ public class Player {
 		selectedCards.clear();
 	}
 	
+	public void incrementNumMaki(int numMaki) {
+		currRoundNumMaki += numMaki;
+	}
+	
 	public void incrementNumChopsticks() {
 		numChopsticksSelected++;
+	}
+	
+	public void incrementNumTempura() {
+		numTempura++;
+	}
+	
+	public void incrementNumWasabi() {
+		numWasabi++;
+	}
+	
+	public void decrementNumWasabi() {
+		numWasabi--;
+	}
+	
+	public void incrementNumDumplings() {
+		numDumplings++;
+	}
+	
+	public void incrementNumSashimi() {
+		numSashimi++;
+	}
+	
+	public void incrementNumPudding() {
+		numPuddings ++;
+	}
+	
+	public int getNumWasabi() {
+		return numWasabi;
+	}
+	
+	public int getNumDumpling() {
+		return numDumplings;
+	}
+	
+	public int getNumTempura() {
+		return numTempura;
+	}
+	
+	public int getNumSashimi() {
+		return numSashimi;
 	}
 	
 	public int getNumChopsticks() {
@@ -132,7 +185,4 @@ public class Player {
 		cardsInHand.add("chopsticks");
 	}
 	
-	public void resetNumChopsticks() {
-		numChopsticksSelected = 0;
-	}
  }
