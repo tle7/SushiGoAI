@@ -127,7 +127,6 @@ public class Player {
 	
 	public void moveChopsticksToHand() {
 		assert numChopsticksSelected > 0;
-		System.out.println("chopsticks moved to hand!");
 		selectedCards.remove("chopsticks");
 		numChopsticksSelected--;
 		cardsInHand.add("chopsticks");
