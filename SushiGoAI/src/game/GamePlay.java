@@ -18,7 +18,7 @@ public class GamePlay {
 
 	//	private static final int NUM_TWO_PLAYER_CARDS = 1;
 
-	private static final int NUM_TWO_PLAYER_CARDS = 4;
+	private static final int NUM_TWO_PLAYER_CARDS = 10;
 	private static Scanner scanner;
 
 	private static final ArrayList<String> deck = new ArrayList<String>();
@@ -279,7 +279,7 @@ public class GamePlay {
 		//update number maki and number pudding and total score
 		currPlayer.setNumMaki(numMaki);
 		currPlayer.updateNumPuddings(numPudding);
-		currScore = getScore(currHand, currPlayer);
+		currScore = getScore(currHand, currPlayer, players);
 		currPlayer.setRoundPoints(currScore);
 	}
 
@@ -326,7 +326,7 @@ public class GamePlay {
 	}
 
 	// get score without changing player properties
-	private static int getScore(ArrayList<String> currHand, Player currPlayer) {
+	private static int getScore(ArrayList<String> currHand, Player currPlayer, ArrayList<Player> allPlayers) {
 		int currScore = 0;
 		int numWasabi = 0;
 		int numTempura = 0;
@@ -383,11 +383,11 @@ public class GamePlay {
 		currScore += ((numTempura / 2) * 5);
 		currScore += ((numSashimi / 3) * 10);
 		currScore += calcDumplingScore(numDumplings);
-		currScore += makiScore(currPlayer);
+		currScore += makiScore(currPlayer, allPlayers);
 		return currScore;
 	}
 
-	private static int makiScore(Player currPlayer) {
+	private static int makiScore(Player currPlayer, ArrayList<Player> allPlayers) {
 		int score = 0;
 		int firstMostMaki = 0;
 		int numFirstPlayers = 0;
@@ -395,7 +395,7 @@ public class GamePlay {
 		int numSecondPlayers = 0;
 
 		int numMakiCurrPlayer = 0;
-		for (Player player: players) {
+		for (Player player: allPlayers) {
 			int numMaki = 0;
 			for (String card: player.getSelectedCards()) {
 				if (card.equals("one-maki")) 
@@ -578,11 +578,11 @@ public class GamePlay {
 //		ai_cards.add(action);
 
 		// calculate score of AI player's hand
-		int AIscore = getScore(ai_cards, AI);
+		int AIscore = getScore(ai_cards, AI, copyPlayers);
 
 		int difference = 0;
 		for (Player player: copyPlayers) {
-			int score = getScore(player.getSelectedCards(), player);
+			int score = getScore(player.getSelectedCards(), player, copyPlayers);
 			if (AIscore - score < difference) {
 				difference = AIscore - score;
 			}
