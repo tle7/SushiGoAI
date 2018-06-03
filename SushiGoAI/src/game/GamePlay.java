@@ -14,13 +14,14 @@ public class GamePlay {
 	private static final int EGG_NIGIRI = 5;
 	private static final int PUDDING = 10;
 	private static final int WASABI = 6;
-	private static final int CHOPSTICKS = 4;
+//	private static final int CHOPSTICKS = 4;
+	private static final int CHOPSTICKS = 0;
 
 //	private static final int NUM_TWO_PLAYER_CARDS = 5;
 
 	private static final int NUM_TWO_PLAYER_CARDS = 10;
 	
-	private static final int INIT_DEPTH = 5;
+	private static final int INIT_DEPTH = 7;
 	private static final int AGENT_ID = 0;
 	private static Scanner scanner;
 
