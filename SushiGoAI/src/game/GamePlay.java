@@ -273,7 +273,7 @@ public class GamePlay {
 		currScore += calcDumplingScore(numDumplings);
 
 		//update number maki and number pudding and total score
-		currPlayer.setNumMaki(numMaki);
+//		currPlayer.setNumMaki(numMaki);
 		currPlayer.updateNumPuddings(numPudding);
 		currScore = getScore(currHand, currPlayer, players);
 		currPlayer.setRoundPoints(currScore);
@@ -390,17 +390,17 @@ public class GamePlay {
 		int secondMostMaki = 0;
 		int numSecondPlayers = 0;
 
-		int numMakiCurrPlayer = 0;
+		int numMakiCurrPlayer = currPlayer.getNumMaki();
 		for (Player player: allPlayers) {
-			int numMaki = 0;
-			for (String card: player.getSelectedCards()) {
-				if (card.equals("one-maki")) 
-					numMaki++;
-				else if (card.equals("two-maki"))
-					numMaki += 2;
-				else if (card.equals("three-maki"))
-					numMaki += 3;
-			}
+			int numMaki = player.getNumMaki();
+//			for (String card: player.getSelectedCards()) {
+//				if (card.equals("one-maki")) 
+//					numMaki++;
+//				else if (card.equals("two-maki"))
+//					numMaki += 2;
+//				else if (card.equals("three-maki"))
+//					numMaki += 3;
+//			}
 			if (numMaki > firstMostMaki) {
 				numFirstPlayers = 1;
 				firstMostMaki = numMaki;
@@ -412,9 +412,9 @@ public class GamePlay {
 			} else if (numMaki == secondMostMaki) {
 				numSecondPlayers++;
 			} 
-			if (player == currPlayer) {
-				numMakiCurrPlayer = numMaki;
-			}
+//			if (player == currPlayer) {
+//				numMakiCurrPlayer = numMaki;
+//			}
 		}
 
 		if (numMakiCurrPlayer == firstMostMaki && numFirstPlayers != 0) {
@@ -492,6 +492,12 @@ public class GamePlay {
 				String currCard = handCards.get(s);
 				if (currCard.equals("chopsticks")) {
 					copyPlayer.incrementNumChopsticks();
+				} else if (currCard.equals("one-maki")) {
+					copyPlayer.updateNumMaki(1);
+				} else if (currCard.equals("two-maki")) {
+					copyPlayer.updateNumMaki(2);
+				} else if (currCard.equals("three-maki")) {
+					copyPlayer.updateNumMaki(3);
 				}
 				copyPlayer.updateSelectedCards(currCard);
 				copyPlayer.removeSelectedCards(currCard);
@@ -548,12 +554,26 @@ public class GamePlay {
 						String secondCard = copyPlayer.getCardsInHand().get(j);
 						if (firstCard.equals("chopsticks")) {
 							copyPlayer.incrementNumChopsticks();
+						} else if (firstCard.equals("one-maki")) {
+							copyPlayer.updateNumMaki(1);
+						} else if (firstCard.equals("two-maki")) {
+							copyPlayer.updateNumMaki(2);
+						} else if (firstCard.equals("three-maki")) {
+							copyPlayer.updateNumMaki(3);
 						}
+						
 						if (secondCard.equals("chopsticks")) {
 							copyPlayer.incrementNumChopsticks();
+						} else if (secondCard.equals("one-maki")) {
+							copyPlayer.updateNumMaki(1);
+						} else if (secondCard.equals("two-maki")) {
+							copyPlayer.updateNumMaki(2);
+						} else if (secondCard.equals("three-maki")) {
+							copyPlayer.updateNumMaki(3);
 						}
 						copyPlayer.updateSelectedCards(firstCard);
 						copyPlayer.removeSelectedCards(firstCard);
+						
 						copyPlayer.updateSelectedCards(secondCard);
 						copyPlayer.removeSelectedCards(secondCard);
 						copyPlayer.moveChopsticksToHand();
@@ -670,8 +690,15 @@ public class GamePlay {
 	private static void handleHandUpdates (Player player, String cardToKeep, boolean selectingSecondCard) {
 		ArrayList<String> newHand = player.getHand();
 		player.updateSelectedCards(cardToKeep);
-		if (cardToKeep.equals("chopsticks"))
+		if (cardToKeep.equals("chopsticks")) {
 			player.incrementNumChopsticks();
+		} else if (cardToKeep.equals("one-maki")) {
+			player.updateNumMaki(1);
+		} else if (cardToKeep.equals("two-maki")) {
+			player.updateNumMaki(2);
+		} else if (cardToKeep.equals("three-maki")) {
+			player.updateNumMaki(3);
+		}
 		newHand.remove(cardToKeep);
 		if (selectingSecondCard) //using chopsticks
 			player.moveChopsticksToHand();
