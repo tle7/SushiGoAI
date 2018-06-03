@@ -160,7 +160,7 @@ public class GamePlay {
 			}
 		}
 		System.out.println("Game is over");
-		handlePuddingScore();
+		handlePuddingScore(players);
 		for (int i = 0; i < players.size(); i++) {
 			System.out.println("Player " + (i + 1) + "'s final score is: " + Integer.toString(players.get(i).getTotalPoints()));
 		}
@@ -431,7 +431,7 @@ public class GamePlay {
 	}
 
 
-	private static void handlePuddingScore() {
+	private static void handlePuddingScore(ArrayList<Player> players) {
 		Player firstPlace = players.get(0);
 		Player secondPlace = players.get(1);
 		int firstPlaceNumPudding = firstPlace.getNumPuddings();
@@ -641,6 +641,7 @@ public class GamePlay {
 				difference = AIscore - score;
 			}
 		}
+		handlePuddingScore(copyPlayers);
 		return difference;
 	}
 
