@@ -101,8 +101,8 @@ public class Player {
 		return selectedCards;
 	}
 	
-	public void setNumMaki(int numMaki) {
-		currRoundNumMaki = numMaki;
+	public void updateNumMaki(int numMaki) {
+		currRoundNumMaki += numMaki;
 	}
 	
 	public void resetNumMaki() {
