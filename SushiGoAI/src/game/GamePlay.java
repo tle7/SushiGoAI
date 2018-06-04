@@ -21,7 +21,7 @@ public class GamePlay {
 
 	private static final int NUM_TWO_PLAYER_CARDS = 10;
 	
-	private static final int INIT_DEPTH = 7;
+	private static final int INIT_DEPTH = 8;
 	private static final int AGENT_ID = 0;
 	private static Scanner scanner;
 
@@ -427,7 +427,7 @@ public class GamePlay {
 		} else if (numSecondPlayers == 0) {
 			score = 3/(players.size()-numFirstPlayers);
 		}
-
+//		System.out.println("Maki Score player: " + currPlayer + " " + Integer.toString(score));
 		return score;
 	}
 
