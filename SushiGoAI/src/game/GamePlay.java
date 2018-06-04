@@ -595,7 +595,6 @@ public class GamePlay {
 						currScoreAction.actions.add(firstCard);
 						currScoreAction.actions.add(secondCard);
 						currScoreAction.score = recurseScoreAction.score;
-//						allActionScores.add(currScoreAction);
 						if (agentIndex == 0) {
 							if (recurseScoreAction.score > bestScore) {
 								bestScore = recurseScoreAction.score;
@@ -642,27 +641,37 @@ public class GamePlay {
 //			}
 //			System.out.println("num Vmaxmin so far: " + Integer.toString(globalAlphaBetaCounter));
 			globalAlphaBetaCounter++;
+//			if (agentIndex == AGENT_ID && optimalActionScore.actions.contains("one-maki")) {
+//				String changedMakiAction = null;
+//				if (agent.getCardsInHand().contains("three-maki")) {
+//					changedMakiAction = "three-maki";
+//				} else if (agent.getCardsInHand().contains("two-maki"))
+//					changedMakiAction = "two-maki";
+//				optimalActionScore.actions.remove("one-maki");
+//				optimalActionScore.actions.add(changedMakiAction);
+//			}
 			return optimalActionScore;
 		}
 	}
 
 	private static int evaluationFunction(ArrayList <Player> copyPlayers) {
 		// update hand based on action
-		Player AI = copyPlayers.get(1);
+		Player AI = copyPlayers.get(AGENT_ID);
 		ArrayList <String> ai_cards = AI.getSelectedCards();
 //		ai_cards.add(action);
 
 		// calculate score of AI player's hand
+		
+		Player humanPlayer = copyPlayers.get(1);
 		int AIscore = getScore(ai_cards, AI, copyPlayers);
-
-		int difference = 0;
-		for (Player player: copyPlayers) {
-			int score = getScore(player.getSelectedCards(), player, copyPlayers);
-			if (AIscore - score < difference) {
-				difference = AIscore - score;
-			}
-		}
+		int humanScore = getScore(humanPlayer.getSelectedCards(), humanPlayer, copyPlayers);
+		AI.updateRoundPoints(AIscore);
+		humanPlayer.updateRoundPoints(humanScore);
 		handlePuddingScore(copyPlayers);
+		
+		int difference = AI.getRoundPoints()- humanPlayer.getRoundPoints();
+//		System.out.println("difference in eval funct is: " + Integer.toString(difference));
+		
 		return difference;
 	}
 
