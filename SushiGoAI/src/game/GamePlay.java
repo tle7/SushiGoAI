@@ -3,25 +3,37 @@ package game;
 import java.util.*;
 
 public class GamePlay {
-	private static final int TEMPURA = 14;
-	private static final int SASHIMI = 14;
-	private static final int DUMPLING = 12;
-	private static final int TWO_MAKI = 12;
-	private static final int THREE_MAKI = 8;
-	private static final int ONE_MAKI = 6;
+//	private static final int TEMPURA = 14;
+//	private static final int SASHIMI = 14;
+//	private static final int DUMPLING = 12;
+//	private static final int TWO_MAKI = 12;
+//	private static final int THREE_MAKI = 8;
+//	private static final int ONE_MAKI = 6;
+//	private static final int SALMON_NIGIRI = 10;
+//	private static final int SQUID_NIGIRI = 5;
+//	private static final int EGG_NIGIRI = 5;
+//	private static final int PUDDING = 10;
+//	private static final int WASABI = 6;
+//	private static final int CHOPSTICKS = 0;
+	
+	private static final int TEMPURA = 0;
+	private static final int SASHIMI = 0;
+	private static final int DUMPLING = 0;
+	private static final int TWO_MAKI = 0;
+	private static final int THREE_MAKI = 0;
+	private static final int ONE_MAKI = 0;
 	private static final int SALMON_NIGIRI = 10;
 	private static final int SQUID_NIGIRI = 5;
-	private static final int EGG_NIGIRI = 5;
-	private static final int PUDDING = 10;
-	private static final int WASABI = 6;
-//	private static final int CHOPSTICKS = 4;
+	private static final int EGG_NIGIRI = 0;
+	private static final int PUDDING = 0;
+	private static final int WASABI = 0;
 	private static final int CHOPSTICKS = 0;
 
-//	private static final int NUM_TWO_PLAYER_CARDS = 5;
+	private static final int NUM_TWO_PLAYER_CARDS = 5;
 
-	private static final int NUM_TWO_PLAYER_CARDS = 10;
+//	private static final int NUM_TWO_PLAYER_CARDS = 10;
 	
-	private static final int INIT_DEPTH = 8;
+	private static final int INIT_DEPTH = 6;
 	private static final int AGENT_ID = 0;
 	private static Scanner scanner;
 
