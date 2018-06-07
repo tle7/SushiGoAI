@@ -496,11 +496,9 @@ public class GamePlay {
 				nextAgentIndex = 0;
 			}
 			ArrayList<String> possibleActions = agent.getCardsInHand();
-//			ArrayList<ScoreAction> allActionScores = new ArrayList<ScoreAction>();
 			boolean chopsticksExplore = true;
 			for (int s = 0; s < possibleActions.size(); s++) {
 				Player copyPlayer = new Player(agent);
-//				ArrayList<String> selectedCards = copyPlayer.getSelectedCards();
 				ArrayList<String> handCards = copyPlayer.getCardsInHand();
 				String currCard = handCards.get(s);
 				if (currCard.equals("chopsticks")) {
