@@ -33,7 +33,7 @@ public class GamePlay {
 
 //	private static final int NUM_TWO_PLAYER_CARDS = 10;
 	
-	private static final int INIT_DEPTH = 6;
+	private static final int INIT_DEPTH = 1;
 	private static final int AGENT_ID = 0;
 	private static Scanner scanner;
 
@@ -143,11 +143,11 @@ public class GamePlay {
 								handleHandUpdates(currPlayer, currCard, (playerCard == 1) ? true : false);
 						}
 					}
-					try {
-						Thread.sleep(2000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+//					try {
+//						Thread.sleep(2000);
+//					} catch (InterruptedException e) {
+//						e.printStackTrace();
+//					}
 				}
 
 				if (roundHasEnded) break;
@@ -511,15 +511,20 @@ public class GamePlay {
 					copyPlayer.updateNumMaki(3);
 				}
 				copyPlayer.updateSelectedCards(currCard);
-				copyPlayer.removeSelectedCards(currCard);
+				copyPlayer.removeHandCard(currCard);
+				
+//				System.out.println("Vmaxmin selected cards are: " + String.join(",", copyPlayer.getSelectedCards()));
+//				System.out.println("size of cards are: " + Integer.toString(copyPlayer.getSelectedCards().size()));
 				
 				//form player array for next iteration
 				ArrayList<Player> currChoicePlayers = new ArrayList<Player>();
 				for (int p = 0; p < allPlayers.size(); p++) {
-					if (p == agentIndex)
+					if (p == agentIndex) {
 						currChoicePlayers.add(copyPlayer);
-					else
+//						System.out.println("selected cards are: " + String.join(",", copyPlayer.getSelectedCards()));
+					} else {
 						currChoicePlayers.add(allPlayers.get(p));
+					}
 				}
 				if (nextAgentIndex == 0)
 					currChoicePlayers = rotateHandCards(currChoicePlayers);
@@ -529,111 +534,113 @@ public class GamePlay {
 				currScoreAction.actions.add(currCard);
 				currScoreAction.score = recurseScoreAction.score;
 				if (agentIndex == 0) {
+					if (depth == INIT_DEPTH)
+						System.out.println("action: " + currCard + "has point value: " + Integer.toString(currScoreAction.score));
 					if (recurseScoreAction.score > bestScore) {
 						bestScore = recurseScoreAction.score;
 						optimalActionScore = currScoreAction;
 					}
-					if (recurseScoreAction.score > alpha) {
-						alpha = recurseScoreAction.score;
+					if (bestScore > alpha) {
+						System.out.println("alpha updated!");
+						alpha = bestScore;
 					}
 					if (beta <= alpha) {
-						chopsticksExplore = false;
-						break;
+//						chopsticksExplore = false;
+//						break;
 					}
 					
 				} else {
+//					if (depth == 1)
+//						System.out.println("possible min action1: " + currCard + " has AI point value: " + Integer.toString(currScoreAction.score));
 					if (recurseScoreAction.score < worstScore) {
 						worstScore = recurseScoreAction.score;
 						optimalActionScore = currScoreAction;
 					}
 					
-					if (recurseScoreAction.score < beta) {
-						beta = recurseScoreAction.score;
+					if (worstScore < beta) {
+//						beta = recurseScoreAction.score;
+						System.out.println("beta updated!");
+						beta = worstScore;
 					}
 					if (beta <= alpha) {
-						chopsticksExplore = false;
-						break;
+//						chopsticksExplore = false;
+//						break;
 					}
 				}
 			}
 			
-			if (chopsticksExplore && (agent.getNumChopsticks() > 0)) {
-				for (int i = 0; i < agent.getCardsInHand().size()-1; i++) {
-					for (int j = i+1; j < agent.getCardsInHand().size(); j++) {
-						Player copyPlayer = new Player(agent);
-						String firstCard = copyPlayer.getCardsInHand().get(i);
-						String secondCard = copyPlayer.getCardsInHand().get(j);
-						if (firstCard.equals("chopsticks")) {
-							copyPlayer.incrementNumChopsticks();
-						} else if (firstCard.equals("one-maki")) {
-							copyPlayer.updateNumMaki(1);
-						} else if (firstCard.equals("two-maki")) {
-							copyPlayer.updateNumMaki(2);
-						} else if (firstCard.equals("three-maki")) {
-							copyPlayer.updateNumMaki(3);
-						}
-						
-						if (secondCard.equals("chopsticks")) {
-							copyPlayer.incrementNumChopsticks();
-						} else if (secondCard.equals("one-maki")) {
-							copyPlayer.updateNumMaki(1);
-						} else if (secondCard.equals("two-maki")) {
-							copyPlayer.updateNumMaki(2);
-						} else if (secondCard.equals("three-maki")) {
-							copyPlayer.updateNumMaki(3);
-						}
-						copyPlayer.updateSelectedCards(firstCard);
-						copyPlayer.removeSelectedCards(firstCard);
-						
-						copyPlayer.updateSelectedCards(secondCard);
-						copyPlayer.removeSelectedCards(secondCard);
-						copyPlayer.moveChopsticksToHand();
-						
-						//form player array for next iteration
-						ArrayList<Player> currChoicePlayers = new ArrayList<Player>();
-						for (int p = 0; p < allPlayers.size(); p++) {
-							if (p == agentIndex)
-								currChoicePlayers.add(copyPlayer);
-							else
-								currChoicePlayers.add(allPlayers.get(p));
-						}
-						if (nextAgentIndex == 0)
-							currChoicePlayers = rotateHandCards(currChoicePlayers);
-						ScoreAction recurseScoreAction = Vmaxmin(currChoicePlayers, nextDepth, nextAgentIndex,
-																  alpha, beta);
-						ScoreAction currScoreAction = new ScoreAction();
-						currScoreAction.actions.add(firstCard);
-						currScoreAction.actions.add(secondCard);
-						currScoreAction.score = recurseScoreAction.score;
-						if (agentIndex == 0) {
-							if (recurseScoreAction.score > bestScore) {
-								bestScore = recurseScoreAction.score;
-								optimalActionScore = currScoreAction;
-							}
-							if (recurseScoreAction.score > alpha)
-								alpha = recurseScoreAction.score;
-							if (beta <= alpha)
-								break;
-							
-						} else {
-							if (recurseScoreAction.score < worstScore) {
-								worstScore = recurseScoreAction.score;
-								optimalActionScore = currScoreAction;
-							}
-							if (recurseScoreAction.score < worstScore) 
-								beta = recurseScoreAction.score;
-							if (beta <= alpha) 
-								break;
-						}
+//			if (chopsticksExplore && (agent.getNumChopsticks() > 0)) {
+//				for (int i = 0; i < agent.getCardsInHand().size()-1; i++) {
+//					for (int j = i+1; j < agent.getCardsInHand().size(); j++) {
+//						Player copyPlayer = new Player(agent);
+//						String firstCard = copyPlayer.getCardsInHand().get(i);
+//						String secondCard = copyPlayer.getCardsInHand().get(j);
+//						if (firstCard.equals("chopsticks")) {
+//							copyPlayer.incrementNumChopsticks();
+//						} else if (firstCard.equals("one-maki")) {
+//							copyPlayer.updateNumMaki(1);
+//						} else if (firstCard.equals("two-maki")) {
+//							copyPlayer.updateNumMaki(2);
+//						} else if (firstCard.equals("three-maki")) {
+//							copyPlayer.updateNumMaki(3);
+//						}
+//						
+//						if (secondCard.equals("chopsticks")) {
+//							copyPlayer.incrementNumChopsticks();
+//						} else if (secondCard.equals("one-maki")) {
+//							copyPlayer.updateNumMaki(1);
+//						} else if (secondCard.equals("two-maki")) {
+//							copyPlayer.updateNumMaki(2);
+//						} else if (secondCard.equals("three-maki")) {
+//							copyPlayer.updateNumMaki(3);
+//						}
+//						copyPlayer.updateSelectedCards(firstCard);
+//						copyPlayer.removeSelectedCards(firstCard);
+//						
+//						copyPlayer.updateSelectedCards(secondCard);
+//						copyPlayer.removeSelectedCards(secondCard);
+//						copyPlayer.moveChopsticksToHand();
+//						
+//						//form player array for next iteration
+//						ArrayList<Player> currChoicePlayers = new ArrayList<Player>();
+//						for (int p = 0; p < allPlayers.size(); p++) {
+//							if (p == agentIndex)
+//								currChoicePlayers.add(copyPlayer);
+//							else
+//								currChoicePlayers.add(allPlayers.get(p));
+//						}
+//						if (nextAgentIndex == 0)
+//							currChoicePlayers = rotateHandCards(currChoicePlayers);
+//						ScoreAction recurseScoreAction = Vmaxmin(currChoicePlayers, nextDepth, nextAgentIndex,
+//																  alpha, beta);
 //						ScoreAction currScoreAction = new ScoreAction();
 //						currScoreAction.actions.add(firstCard);
 //						currScoreAction.actions.add(secondCard);
 //						currScoreAction.score = recurseScoreAction.score;
-//						allActionScores.add(currScoreAction);
-					}
-				}
-				
-			}
+//						if (agentIndex == 0) {
+//							if (recurseScoreAction.score > bestScore) {
+//								bestScore = recurseScoreAction.score;
+//								optimalActionScore = currScoreAction;
+//							}
+//							if (recurseScoreAction.score > alpha)
+//								alpha = recurseScoreAction.score;
+//							if (beta <= alpha)
+//								break;
+//							
+//						} else {
+//							if (recurseScoreAction.score < worstScore) {
+//								worstScore = recurseScoreAction.score;
+//								optimalActionScore = currScoreAction;
+//							}
+//							if (recurseScoreAction.score < worstScore) 
+//								beta = recurseScoreAction.score;
+//							if (beta <= alpha) 
+//								break;
+//						}
+//					}
+//				}
+//				
+//			}
 			
 			//get the optimal ActionScore
 //			int bestScore = Integer.MIN_VALUE;
@@ -660,6 +667,7 @@ public class GamePlay {
 //				optimalActionScore.actions.remove("one-maki");
 //				optimalActionScore.actions.add(changedMakiAction);
 //			}
+//			System.out.println("finished checking hand");
 			return optimalActionScore;
 		}
 	}
@@ -668,21 +676,22 @@ public class GamePlay {
 		// update hand based on action
 		Player AI = copyPlayers.get(AGENT_ID);
 		ArrayList <String> ai_cards = AI.getSelectedCards();
-//		ai_cards.add(action);
 
 		// calculate score of AI player's hand
 		
 		Player humanPlayer = copyPlayers.get(1);
 		int AIscore = getScore(ai_cards, AI, copyPlayers);
 		int humanScore = getScore(humanPlayer.getSelectedCards(), humanPlayer, copyPlayers);
-		AI.updateRoundPoints(AIscore);
-		humanPlayer.updateRoundPoints(humanScore);
-		handlePuddingScore(copyPlayers);
+
+//		handlePuddingScore(copyPlayers);
 		
-		int difference = AI.getRoundPoints()- humanPlayer.getRoundPoints();
-//		System.out.println("difference in eval funct is: " + Integer.toString(difference));
-		
-		return difference;
+//		System.out.println("AI hand is: " + String.join(",", AI.getSelectedCards()));
+//		System.out.println("AI score is: " + Integer.toString(AI.getRoundPoints()));
+//		System.out.println("human hand is: " + String.join(",", humanPlayer.getSelectedCards()));
+//		System.out.println("human score is: " + Integer.toString(humanScore));
+		assert AI.getSelectedCards().size() == humanPlayer.getSelectedCards().size();
+//		return AIscore;
+		return AIscore - humanScore;
 	}
 
 	private static String handlePlayerCardSelection(Player player, boolean selectingSecondCard) {

@@ -135,4 +135,8 @@ public class Player {
 	public void resetNumChopsticks() {
 		numChopsticksSelected = 0;
 	}
+	
+	public void removeHandCard(String cardToRemove) {
+		cardsInHand.remove(cardToRemove);
+	}
  }
