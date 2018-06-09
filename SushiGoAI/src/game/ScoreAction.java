@@ -4,11 +4,11 @@ import java.util.*;
 
 public class ScoreAction {
 
-	public ArrayList<String> actions;
+	public ArrayList<Integer> actions;
 	public int score;
 	
 	public ScoreAction() {
-		actions = new ArrayList<String>();
+		actions = new ArrayList<Integer>();
 		score = 0;
 	}
 }

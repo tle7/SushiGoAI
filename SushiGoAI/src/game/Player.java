@@ -4,23 +4,27 @@ import java.util.*;
 
 public class Player {
 	
-	private ArrayList<String> selectedCards;
-	private ArrayList<String> cardsInHand;
+	private ArrayList<Integer> selectedCards;
+	private ArrayList<Integer> cardsInHand;
 	private int totalPoints;
 	private int numPuddings;
 	private int currRoundNumMaki;
 	private int roundPoints;
 	private int numChopsticksSelected;
 	
+	private static final int CHOPSTICKS_CARD = 11;
+	
 	public Player() {
-		selectedCards = new ArrayList<String>();
-		cardsInHand = new ArrayList<String>();
+		selectedCards = new ArrayList<Integer>();
+		cardsInHand = new ArrayList<Integer>();
 		totalPoints = 0;
 		numPuddings = 0;
 		currRoundNumMaki = 0;
 		roundPoints = 0;
 		numChopsticksSelected = 0;
 	}
+	
+//	private ArrayList<Integer> copyArrList(ArrayList<Integer>)
 	
 	//copy constructor
 	Player (Player copyPlayer) {
@@ -29,10 +33,10 @@ public class Player {
 		currRoundNumMaki = copyPlayer.getNumMaki();
 		roundPoints = copyPlayer.getRoundPoints();
 		numChopsticksSelected = copyPlayer.getNumChopsticks();
-		cardsInHand = new ArrayList<String>();
-		selectedCards = new ArrayList<String>();
-		ArrayList<String> copyHand = copyPlayer.getCardsInHand();
-		ArrayList<String> copySelected = copyPlayer.getSelectedCards();
+		cardsInHand = new ArrayList<Integer>();
+		selectedCards = new ArrayList<Integer>();
+		ArrayList<Integer> copyHand = copyPlayer.getCardsInHand();
+		ArrayList<Integer> copySelected = copyPlayer.getSelectedCards();
 		for (int i = 0; i < copyHand.size(); i++) {
 			cardsInHand.add(copyHand.get(i));
 		}
@@ -41,11 +45,11 @@ public class Player {
 		}
 	}
 	
-	public void updateCards(String newCard) {
+	public void updateCards(int newCard) {
 		selectedCards.add(newCard);
 	}
 	
-	public ArrayList<String> getCards() {
+	public ArrayList<Integer> getCards() {
 		return selectedCards;
 	}
 	
@@ -77,27 +81,27 @@ public class Player {
 		return numPuddings;
 	}
 	
-	public ArrayList<String> getCardsInHand() {
+	public ArrayList<Integer> getCardsInHand() {
 		return cardsInHand;
 	}
 	
-	public void updateHand(ArrayList<String> updatedHand) {
+	public void updateHand(ArrayList<Integer> updatedHand) {
 		cardsInHand = updatedHand;
 	}
 	
-	public ArrayList<String> getHand() {
+	public ArrayList<Integer> getHand() {
 		return cardsInHand;
 	}
 	
-	public void updateSelectedCards(String cardToAdd) {
+	public void updateSelectedCards(int cardToAdd) {
 		selectedCards.add(cardToAdd);
 	}
 	
-	public void removeSelectedCards(String cardToRemove) {
-		selectedCards.remove(cardToRemove);
+	public void removeSelectedCards(int cardToRemove) {
+		selectedCards.remove(Integer.valueOf(cardToRemove));
 	}
 	
-	public ArrayList<String> getSelectedCards() {
+	public ArrayList<Integer> getSelectedCards() {
 		return selectedCards;
 	}
 	
@@ -127,16 +131,16 @@ public class Player {
 	
 	public void moveChopsticksToHand() {
 		assert numChopsticksSelected > 0;
-		selectedCards.remove("chopsticks");
+		selectedCards.remove(Integer.valueOf(CHOPSTICKS_CARD));
 		numChopsticksSelected--;
-		cardsInHand.add("chopsticks");
+		cardsInHand.add(CHOPSTICKS_CARD);
 	}
 	
 	public void resetNumChopsticks() {
 		numChopsticksSelected = 0;
 	}
 	
-	public void removeHandCard(String cardToRemove) {
-		cardsInHand.remove(cardToRemove);
+	public void removeHandCard(int cardToRemove) {
+		cardsInHand.remove(Integer.valueOf(cardToRemove));
 	}
  }
