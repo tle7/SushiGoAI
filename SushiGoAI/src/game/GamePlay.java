@@ -18,10 +18,10 @@ public class GamePlay {
 
 	private static final int TEMPURA = 0;
 	private static final int SASHIMI = 0;
-	private static final int DUMPLING = 12;
-	private static final int TWO_MAKI = 0;
-	private static final int THREE_MAKI = 0;
-	private static final int ONE_MAKI = 0;
+	private static final int DUMPLING = 0;
+	private static final int TWO_MAKI = 12;
+	private static final int THREE_MAKI = 8;
+	private static final int ONE_MAKI = 6;
 	private static final int SALMON_NIGIRI = 10;
 	private static final int SQUID_NIGIRI = 5;
 	private static final int EGG_NIGIRI = 0;
@@ -47,7 +47,8 @@ public class GamePlay {
 	//Vmaxmin: make sure setting consistent scoring in with right variable names
 	//	private static final int NUM_TWO_PLAYER_CARDS = 10;
 
-	private static final int INIT_DEPTH = 3;
+
+	private static final int INIT_DEPTH = 9;
 	private static final int AGENT_ID = 0;
 	private static Scanner scanner;
 
@@ -282,10 +283,26 @@ public class GamePlay {
 		Player player1 = new Player();
 		Player player2 = new Player();
 
-		players.add(player1);
-		players.add(player2);
+		//		players.add(player1);
+		//		players.add(player2);
+		//		ArrayList<String> player1hand = new ArrayList<String>() {{
+		//			add("salmon-nigiri");
+		//			add("salmon-nigiri");
+		//			add("salmon-nigiri");
+		//		}};
+		//		player1.updateHand(player1hand);
+		//		ArrayList<String> player2hand = new ArrayList<String>() {{
+		//			add("salmon-nigiri");
+		//			add("salmon-nigiri");
+		//			add("squid-nigiri");
+		//		}};
+		//		player1.updateHand(player1hand);
+		//		player2.updateHand(player2hand);
 		player1.updateHand(getCardHand(NUM_TWO_PLAYER_CARDS));
 		player2.updateHand(getCardHand(NUM_TWO_PLAYER_CARDS));
+
+		players.add(player1);
+		players.add(player2);
 
 		//		ArrayList<String> start1 = new ArrayList<String>();
 		//		start1.add("squid-nigiri");
@@ -512,7 +529,7 @@ public class GamePlay {
 		} else if (numSecondPlayers == 0) {
 			score = 3/(players.size()-numFirstPlayers);
 		}
-
+		//		System.out.println("Maki Score player: " + currPlayer + " " + Integer.toString(score));
 		return score;
 	}
 
@@ -585,9 +602,6 @@ public class GamePlay {
 				copyPlayer.updateSelectedCards(currCard);
 				copyPlayer.removeHandCard(currCard);
 
-				//				System.out.println("Vmaxmin selected cards are: " + String.join(",", copyPlayer.getSelectedCards()));
-				//				System.out.println("size of cards are: " + Integer.toString(copyPlayer.getSelectedCards().size()));
-
 				//form player array for next iteration
 				ArrayList<Player> currChoicePlayers = new ArrayList<Player>();
 				for (int p = 0; p < allPlayers.size(); p++) {
@@ -595,11 +609,17 @@ public class GamePlay {
 						currChoicePlayers.add(copyPlayer);
 						//						System.out.println("selected cards are: " + String.join(",", copyPlayer.getSelectedCards()));
 					} else {
-						currChoicePlayers.add(allPlayers.get(p));
+						Player other = new Player(allPlayers.get(p));
+						currChoicePlayers.add(other);
 					}
 				}
-				if (nextAgentIndex == 0)
+				if (nextAgentIndex == 0) {
+					//					ArrayList<String> temp = currChoicePlayers.get(0).getHand();
+					//					currChoicePlayers.get(0).updateHand(currChoicePlayers.get(1).getHand());
+					//					currChoicePlayers.get(1).updateHand(temp);
 					currChoicePlayers = rotateHandCards(currChoicePlayers);
+				}
+				//				System.out.println("new hand of agent " + Integer.toString(agentIndex) + ": " + currChoicePlayers.get(agentIndex).getHand());
 				ScoreAction recurseScoreAction = Vmaxmin(currChoicePlayers, nextDepth, nextAgentIndex, 
 						alpha, beta);
 				ScoreAction currScoreAction = new ScoreAction();
@@ -607,9 +627,11 @@ public class GamePlay {
 				currScoreAction.score = recurseScoreAction.score;
 				if (agentIndex == 0) {
 					if (depth == INIT_DEPTH) {
-						System.out.println("action: " + constToName.get(currCard) + "has point value: " + Integer.toString(currScoreAction.score));
-						System.out.println("");
+						//						System.out.println("action: " + constToName.get(currCard) + "has point value: " + Integer.toString(currScoreAction.score));
+						//						System.out.println("");
 					}
+					//					if (depth == INIT_DEPTH)
+					//						System.out.println("action: " + currCard + "has point value: " + Integer.toString(currScoreAction.score));
 					if (recurseScoreAction.score > bestScore) {
 						bestScore = recurseScoreAction.score;
 						optimalActionScore = currScoreAction;
@@ -633,7 +655,6 @@ public class GamePlay {
 					}
 
 					if (worstScore < beta) {
-						//						beta = recurseScoreAction.score;
 						beta = worstScore;
 					}
 					if (beta <= alpha) {
@@ -765,6 +786,12 @@ public class GamePlay {
 
 		//		System.out.println("AI hand is: " + String.join(",", AI.getSelectedCards()));
 		//		System.out.println("AI score is: " + Integer.toString(AI.getRoundPoints()));
+		//		System.out.println("human hand is: " + String.join(",", humanPlayer.getSelectedCards()));
+		//		System.out.println("human score is: " + Integer.toString(humanScore));
+		//		handlePuddingScore(copyPlayers);
+
+		//		System.out.println("AI hand is: " + String.join(",", AI.getSelectedCards()));
+		//		System.out.println("AI score is: " + Integer.toString(AIscore));
 		//		System.out.println("human hand is: " + String.join(",", humanPlayer.getSelectedCards()));
 		//		System.out.println("human score is: " + Integer.toString(humanScore));
 		assert AI.getSelectedCards().size() == humanPlayer.getSelectedCards().size();

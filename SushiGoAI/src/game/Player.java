@@ -24,7 +24,12 @@ public class Player {
 		numChopsticksSelected = 0;
 	}
 	
-//	private ArrayList<Integer> copyArrList(ArrayList<Integer>)
+	private ArrayList<Integer> copyArrList(ArrayList<Integer> arrToCopy) {
+		ArrayList<Integer> copyArrList = new ArrayList<Integer>();
+		for (int i = 0; i < arrToCopy.size(); i++)
+			copyArrList.add(arrToCopy.get(i));
+		return copyArrList;
+	}
 	
 	//copy constructor
 	Player (Player copyPlayer) {
@@ -33,16 +38,13 @@ public class Player {
 		currRoundNumMaki = copyPlayer.getNumMaki();
 		roundPoints = copyPlayer.getRoundPoints();
 		numChopsticksSelected = copyPlayer.getNumChopsticks();
+
 		cardsInHand = new ArrayList<Integer>();
 		selectedCards = new ArrayList<Integer>();
-		ArrayList<Integer> copyHand = copyPlayer.getCardsInHand();
-		ArrayList<Integer> copySelected = copyPlayer.getSelectedCards();
-		for (int i = 0; i < copyHand.size(); i++) {
-			cardsInHand.add(copyHand.get(i));
-		}
-		for (int i = 0; i < copySelected.size(); i++) {
-			selectedCards.add(copySelected.get(i));
-		}
+		
+		cardsInHand = copyArrList(copyPlayer.getCardsInHand());
+		
+		selectedCards = copyArrList(copyPlayer.getSelectedCards());
 	}
 	
 	public void updateCards(int newCard) {
