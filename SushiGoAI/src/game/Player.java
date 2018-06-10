@@ -75,7 +75,7 @@ public class Player {
 		return roundPoints;
 	}
 	
-	public void updateNumPuddings(int puddingsToAdd) {
+	public void updateNumPudding(int puddingsToAdd) {
 		numPuddings += puddingsToAdd;
 	}
 	
