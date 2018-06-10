@@ -42,7 +42,7 @@ public class GamePlay {
 	private static final int WASABI_CARD = 10;
 	private static final int CHOPSTICKS_CARD = 11;
 
-	private static final int NUM_TWO_PLAYER_CARDS = 10;
+	private static final int NUM_TWO_PLAYER_CARDS = 5;
 	//TODO: replicate bug with just squid and salmon and check min scoring
 	//Vmaxmin: make sure setting consistent scoring in with right variable names
 	//	private static final int NUM_TWO_PLAYER_CARDS = 10;
@@ -137,11 +137,12 @@ public class GamePlay {
 
 			boolean roundHasEnded = false;
 
-			if (r != 0) {
-				for (int p = 0; p < players.size(); p++) {
-					players.get(p).updateHand(getCardHand(NUM_TWO_PLAYER_CARDS));
-				}
-			}
+//			if (r != 0) {
+//				for (int p = 0; p < players.size(); p++) {
+//					players.get(p).updateHand(getCardHand(NUM_TWO_PLAYER_CARDS));
+//				}
+//			}
+			initPlayerHands(2);
 
 			while(true) {
 
@@ -198,7 +199,7 @@ public class GamePlay {
 						currPlayer.updateHand(currPlayerHand);
 
 						//handle giving player 2 real hand
-						if (r == 0 && numCardsToStart == NUM_TWO_PLAYER_CARDS) {
+						if (numCardsToStart == NUM_TWO_PLAYER_CARDS) { //only one card selected
 							for (int simCardInd = 0; simCardInd < humanSimulateHand.size(); simCardInd++) {
 								deck.add(humanSimulateHand.get(simCardInd));
 							}
@@ -277,6 +278,23 @@ public class GamePlay {
 		Player player1 = new Player();
 		Player player2 = new Player();
 
+//		player1.updateHand(getCardHand(NUM_TWO_PLAYER_CARDS));
+//		player2.updateHand(getCardHand(NUM_TWO_PLAYER_CARDS));
+//
+//		ArrayList<Integer> player2Hand = player2.getHand();
+//		for (int i = 0; i < NUM_TWO_PLAYER_CARDS; i++) {
+//			humanSimulateHand.add(player2Hand.get(i));
+//		}
+
+
+		players.add(player1);
+		players.add(player2);
+	}
+	
+	private static void initPlayerHands(int numPlayers) {
+		Player player1 = players.get(0);
+		Player player2 = players.get(1);
+		
 		player1.updateHand(getCardHand(NUM_TWO_PLAYER_CARDS));
 		player2.updateHand(getCardHand(NUM_TWO_PLAYER_CARDS));
 
@@ -284,10 +302,6 @@ public class GamePlay {
 		for (int i = 0; i < NUM_TWO_PLAYER_CARDS; i++) {
 			humanSimulateHand.add(player2Hand.get(i));
 		}
-
-
-		players.add(player1);
-		players.add(player2);
 	}
 
 	private static ArrayList<Integer> getCardHand (int numCards) {
