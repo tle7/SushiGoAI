@@ -149,7 +149,8 @@ public class GamePlay {
 
 					Player currPlayer = players.get(i);
 
-					if (currPlayer.getHand().size() == 0) {
+					int numCardsToStart = currPlayer.getHand().size();
+					if (numCardsToStart == 0) {
 						System.out.println("End of round!");
 						roundHasEnded = true;
 						break;
@@ -197,9 +198,10 @@ public class GamePlay {
 						currPlayer.updateHand(currPlayerHand);
 
 						//handle giving player 2 real hand
-						if (r == 0) {
-							for (int simCardInd = 0; simCardInd < humanSimulateHand.size(); simCardInd++) 
+						if (r == 0 && numCardsToStart == NUM_TWO_PLAYER_CARDS) {
+							for (int simCardInd = 0; simCardInd < humanSimulateHand.size(); simCardInd++) {
 								deck.add(humanSimulateHand.get(simCardInd));
+							}
 							players.get(1).updateHand(getCardHand(NUM_TWO_PLAYER_CARDS));
 						}
 					} else {
