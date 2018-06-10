@@ -16,9 +16,9 @@ public class GamePlay {
 	//	private static final int WASABI = 6;
 	//	private static final int CHOPSTICKS = 0;
 
-	private static final int TEMPURA = 0;
-	private static final int SASHIMI = 0;
-	private static final int DUMPLING = 0;
+	private static final int TEMPURA = 14;
+	private static final int SASHIMI = 14;
+	private static final int DUMPLING = 12;
 	private static final int TWO_MAKI = 12;
 	private static final int THREE_MAKI = 8;
 	private static final int ONE_MAKI = 6;
@@ -26,7 +26,7 @@ public class GamePlay {
 	private static final int SQUID_NIGIRI = 5;
 	private static final int EGG_NIGIRI = 0;
 	private static final int PUDDING = 0;
-	private static final int WASABI = 0;
+	private static final int WASABI = 6;
 	private static final int CHOPSTICKS = 0;
 
 	private static final int TEMPURA_CARD = 0;
@@ -42,13 +42,13 @@ public class GamePlay {
 	private static final int WASABI_CARD = 10;
 	private static final int CHOPSTICKS_CARD = 11;
 
-	private static final int NUM_TWO_PLAYER_CARDS = 10;
+	private static final int NUM_TWO_PLAYER_CARDS = 6;
 	//TODO: replicate bug with just squid and salmon and check min scoring
 	//Vmaxmin: make sure setting consistent scoring in with right variable names
 	//	private static final int NUM_TWO_PLAYER_CARDS = 10;
 
 
-	private static final int INIT_DEPTH = 9;
+	private static final int INIT_DEPTH = 6;
 	private static final int AGENT_ID = 0;
 	private static Scanner scanner;
 
@@ -586,10 +586,15 @@ public class GamePlay {
 			}
 			ArrayList<Integer> possibleActions = agent.getCardsInHand();
 			boolean chopsticksExplore = true;
+			Set<Integer> seenActions = new HashSet<Integer>();
 			for (int s = 0; s < possibleActions.size(); s++) {
+				int currCard = possibleActions.get(s);
+				if (seenActions.contains(currCard)) {
+					continue;
+				}
+				seenActions.add(currCard);
 				Player copyPlayer = new Player(agent);
 				ArrayList<Integer> handCards = copyPlayer.getCardsInHand();
-				int currCard = handCards.get(s);
 				if (currCard == CHOPSTICKS_CARD) {
 					copyPlayer.incrementNumChopsticks();
 				} else if (currCard == ONE_MAKI_CARD) {
@@ -641,7 +646,7 @@ public class GamePlay {
 					}
 					if (beta <= alpha) {
 						//						chopsticksExplore = false;
-						//						break;
+						break;
 					}
 
 				} else {
@@ -659,7 +664,7 @@ public class GamePlay {
 					}
 					if (beta <= alpha) {
 						//						chopsticksExplore = false;
-						//						break;
+						break;
 					}
 				}
 			}
