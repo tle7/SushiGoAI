@@ -3,19 +3,6 @@ package game;
 import java.util.*;
 
 public class GamePlay {
-	//	private static final int TEMPURA = 14;
-	//	private static final int SASHIMI = 14;
-	//	private static final int DUMPLING = 12;
-	//	private static final int TWO_MAKI = 12;
-	//	private static final int THREE_MAKI = 8;
-	//	private static final int ONE_MAKI = 6;
-	//	private static final int SALMON_NIGIRI = 10;
-	//	private static final int SQUID_NIGIRI = 5;
-	//	private static final int EGG_NIGIRI = 5;
-	//	private static final int PUDDING = 10;
-	//	private static final int WASABI = 6;
-	//	private static final int CHOPSTICKS = 0;
-
 	private static final int TEMPURA = 14;
 	private static final int SASHIMI = 14;
 	private static final int DUMPLING = 12;
@@ -42,10 +29,7 @@ public class GamePlay {
 	private static final int WASABI_CARD = 10;
 	private static final int CHOPSTICKS_CARD = 11;
 
-	private static final int NUM_TWO_PLAYER_CARDS = 5;
-	//TODO: replicate bug with just squid and salmon and check min scoring
-	//Vmaxmin: make sure setting consistent scoring in with right variable names
-	//	private static final int NUM_TWO_PLAYER_CARDS = 10;
+	private static final int NUM_TWO_PLAYER_CARDS = 10;
 
 
 	private static final int INIT_DEPTH = 10;
@@ -60,21 +44,6 @@ public class GamePlay {
 
 	private static HashMap<Integer, String> constToName;
 	private static HashMap<String, Integer> nameToConst;
-
-	//	public static final String[] cardNamesArr = new String[] {"tempura", "sashimi", "dumpling", "two-maki", "three-maki", "one-maki", "salmon-nigiri", "squid-nigiri",
-	//			"egg-nigiri", "pudding", "wasabi", "chopsticks"};
-	//	public static final Set<String> cardNamesSet = new HashSet<>(Arrays.asList(cardNamesArr));
-
-	//	private class ActionScore {
-	//		private String action;
-	//		private int score;
-	//		public ActionScore(String a, int i) {
-	//			action = a;
-	//			score = i;
-	//		}
-	//	}
-	//	public static final String[] cardNamesArr = new String[] {"tempura", "sashimi", "dumpling", "two-maki", "three-maki", "one-maki", "salmon-nigiri", "squid-nigiri",
-	//			"egg-nigiri", "pudding", "wasabi", "chopsticks"};
 
 	private static void initializeMaps() {
 		constToName = new HashMap<>();
@@ -104,16 +73,6 @@ public class GamePlay {
 		nameToConst.put("pudding", PUDDING_CARD);
 		nameToConst.put("wasabi", WASABI_CARD);
 		nameToConst.put("chopsticks", CHOPSTICKS_CARD);
-
-		//		System.out.println("constToName map:");
-		//		for (Map.Entry<Integer, String> entry: constToName.entrySet()) {
-		//			System.out.println("const key: " + Integer.toString(entry.getKey()) + " value: " + entry.getValue());
-		//		}
-		//		
-		//		System.out.println("nameToConst map:");
-		//		for (Map.Entry<String, Integer> entry: nameToConst.entrySet()) {
-		//			System.out.println("name Key: " + entry.getKey() + " value: " + entry.getValue());
-		//		}
 	}
 
 	public static void main(String[] args) {
@@ -136,12 +95,6 @@ public class GamePlay {
 			System.out.println("\n");
 
 			boolean roundHasEnded = false;
-
-//			if (r != 0) {
-//				for (int p = 0; p < players.size(); p++) {
-//					players.get(p).updateHand(getCardHand(NUM_TWO_PLAYER_CARDS));
-//				}
-//			}
 			initPlayerHands(2);
 
 			while(true) {
@@ -225,7 +178,6 @@ public class GamePlay {
 				int currScore = getScore(currPlayer.getSelectedCards(), currPlayer, players, r == 2);
 				currPlayer.setRoundPoints(currScore);
 			}
-			//			handleMakiScore();
 
 			//Show each player's score at the end of the round and deal a new hand
 			for (int k = 0; k < players.size(); k++) {
@@ -239,7 +191,6 @@ public class GamePlay {
 			}
 		}
 		System.out.println("Game is over");
-		//		handlePuddingScore(players);
 		for (int i = 0; i < players.size(); i++) {
 			System.out.println("Player " + (i + 1) + "'s final score is: " + Integer.toString(players.get(i).getTotalPoints()));
 		}
@@ -278,15 +229,6 @@ public class GamePlay {
 		Player player1 = new Player();
 		Player player2 = new Player();
 
-//		player1.updateHand(getCardHand(NUM_TWO_PLAYER_CARDS));
-//		player2.updateHand(getCardHand(NUM_TWO_PLAYER_CARDS));
-//
-//		ArrayList<Integer> player2Hand = player2.getHand();
-//		for (int i = 0; i < NUM_TWO_PLAYER_CARDS; i++) {
-//			humanSimulateHand.add(player2Hand.get(i));
-//		}
-
-
 		players.add(player1);
 		players.add(player2);
 	}
@@ -315,11 +257,6 @@ public class GamePlay {
 		return currHand;
 	}
 
-	//	private static void countScoreInHand(ArrayList<Integer> currHand, Player currPlayer) {
-	//		int currScore = getScore(currHand, currPlayer, players); 
-	//		currPlayer.setRoundPoints(currScore);
-	//	}
-
 	private static int calcDumplingScore (int numDumplings) {
 		switch (numDumplings) {
 		case 1:
@@ -343,10 +280,7 @@ public class GamePlay {
 		Player secondPlace = players.get(1);
 		int firstPlaceScore = firstPlace.getNumMaki();
 		int secondPlaceScore = secondPlace.getNumMaki();
-
-		//		System.out.println("Player 1 has Maki Score: " + Integer.toString(firstPlaceScore));
-		//		System.out.println("Player 2 has Maki Score: " + Integer.toString(secondPlaceScore));
-
+		
 		if (secondPlaceScore > firstPlaceScore) {
 			Player temp = firstPlace;
 			firstPlace = secondPlace;
@@ -379,14 +313,6 @@ public class GamePlay {
 				numDumplings++;
 			else if (card == SASHIMI_CARD)
 				numSashimi++;
-			//			else if (card == ONE_MAKI_CARD)
-			//				numMaki++;
-			//			else if (card == TWO_MAKI_CARD)
-			//				numMaki += 2;
-			//			else if (card == THREE_MAKI_CARD)
-			//				numMaki += 3;
-			//			else if (card == PUDDING_CARD)
-			//				numPudding++;
 			else if (card == SALMON_NIGIRI_CARD) {
 				if (numWasabi > 0) {
 					currScore += 6;
@@ -417,7 +343,6 @@ public class GamePlay {
 		currScore += ((numSashimi / 3) * 10);
 		currScore += calcDumplingScore(numDumplings);
 		currScore += makiScore(currPlayer, allPlayers);
-		//TODO add boolean to add pudding score similarly to the makiScore function
 		if (calcPudding)
 			currScore += puddingScore(currPlayer, allPlayers);
 		return currScore;
@@ -455,7 +380,6 @@ public class GamePlay {
 		} else if (numSecondPlayers == 0) {
 			score = 3/(players.size()-numFirstPlayers);
 		}
-		//		System.out.println("Maki Score player: " + currPlayer + " " + Integer.toString(score));
 		return score;
 	}
 
@@ -478,38 +402,6 @@ public class GamePlay {
 		}
 	}
 
-
-	//TODO: format like maki score
-	private static void handlePuddingScore(ArrayList<Player> players) {
-		Player firstPlace = players.get(0);
-		Player secondPlace = players.get(1);
-		int firstPlaceNumPudding = firstPlace.getNumPuddings();
-		int secondPlaceNumPudding = secondPlace.getNumPuddings();
-
-
-		if (firstPlaceNumPudding == secondPlaceNumPudding)
-			return;
-
-		if (firstPlaceNumPudding < secondPlaceNumPudding) {
-			Player temp = firstPlace;
-			firstPlace = secondPlace;
-			secondPlace = temp;
-		}
-
-		firstPlace.updateTotalPoints(6);
-		secondPlace.updateTotalPoints(-6);
-	}
-
-	private static void updateHandAndCards (Player player, int input) {
-		// update player's selected cards
-		player.updateCards(input);
-
-		// remove from hand
-		ArrayList<Integer> cardsInHand = player.getCardsInHand();
-		cardsInHand.remove(Integer.valueOf(input));
-		player.updateHand(cardsInHand);
-	}
-
 	private static ScoreAction Vmaxmin(ArrayList<Player> allPlayers, int depth, int agentIndex,
 			int alpha, int beta) {
 		Player agent = allPlayers.get(agentIndex);
@@ -530,7 +422,6 @@ public class GamePlay {
 				nextAgentIndex = 0;
 			}
 			ArrayList<Integer> possibleActions = agent.getCardsInHand();
-			boolean chopsticksExplore = true;
 			Set<Integer> seenActions = new HashSet<Integer>();
 			for (int s = 0; s < possibleActions.size(); s++) {
 				int currCard = possibleActions.get(s);
@@ -539,7 +430,6 @@ public class GamePlay {
 				}
 				seenActions.add(currCard);
 				Player copyPlayer = new Player(agent);
-				ArrayList<Integer> handCards = copyPlayer.getCardsInHand();
 				if (currCard == CHOPSTICKS_CARD) {
 					copyPlayer.incrementNumChopsticks();
 				} else if (currCard == ONE_MAKI_CARD) {
@@ -559,29 +449,20 @@ public class GamePlay {
 				for (int p = 0; p < allPlayers.size(); p++) {
 					if (p == agentIndex) {
 						currChoicePlayers.add(copyPlayer);
-						//						System.out.println("selected cards are: " + String.join(",", copyPlayer.getSelectedCards()));
 					} else {
 						Player other = new Player(allPlayers.get(p));
 						currChoicePlayers.add(other);
 					}
 				}
 				if (nextAgentIndex == 0) {
-					//					ArrayList<String> temp = currChoicePlayers.get(0).getHand();
-					//					currChoicePlayers.get(0).updateHand(currChoicePlayers.get(1).getHand());
-					//					currChoicePlayers.get(1).updateHand(temp);
 					currChoicePlayers = rotateHandCards(currChoicePlayers);
 				}
-				//				System.out.println("new hand of agent " + Integer.toString(agentIndex) + ": " + currChoicePlayers.get(agentIndex).getHand());
 				ScoreAction recurseScoreAction = Vmaxmin(currChoicePlayers, nextDepth, nextAgentIndex, 
 						alpha, beta);
 				ScoreAction currScoreAction = new ScoreAction();
 				currScoreAction.actions.add(currCard);
 				currScoreAction.score = recurseScoreAction.score;
 				if (agentIndex == 0) {
-					if (depth == INIT_DEPTH) {
-						//						System.out.println("action: " + constToName.get(currCard) + "has point value: " + Integer.toString(currScoreAction.score));
-						//						System.out.println("");
-					}
 					if (recurseScoreAction.score > bestScore) {
 						bestScore = recurseScoreAction.score;
 						optimalActionScore = currScoreAction;
@@ -590,13 +471,10 @@ public class GamePlay {
 						alpha = bestScore;
 					}
 					if (beta <= alpha) {
-						//						chopsticksExplore = false;
 						break;
 					}
 
 				} else {
-					//					if (depth == 1)
-					//						System.out.println("possible min action1: " + currCard + " has AI point value: " + Integer.toString(currScoreAction.score));
 					if (depth == INIT_DEPTH)
 						System.out.println("possible min action: " + constToName.get(currCard) + " has value: " + Integer.toString(currScoreAction.score));
 					if (recurseScoreAction.score < worstScore) {
@@ -608,115 +486,12 @@ public class GamePlay {
 						beta = worstScore;
 					}
 					if (beta <= alpha) {
-						//						chopsticksExplore = false;
 						break;
 					}
 				}
 			}
 
-			//			if (chopsticksExplore && (agent.getNumChopsticks() > 0)) {
-			//				for (int i = 0; i < agent.getCardsInHand().size()-1; i++) {
-			//					for (int j = i+1; j < agent.getCardsInHand().size(); j++) {
-			//						Player copyPlayer = new Player(agent);
-			//						String firstCard = copyPlayer.getCardsInHand().get(i);
-			//						String secondCard = copyPlayer.getCardsInHand().get(j);
-			//						if (firstCard.equals("chopsticks")) {
-			//							copyPlayer.incrementNumChopsticks();
-			//						} else if (firstCard.equals("one-maki")) {
-			//							copyPlayer.updateNumMaki(1);
-			//						} else if (firstCard.equals("two-maki")) {
-			//							copyPlayer.updateNumMaki(2);
-			//						} else if (firstCard.equals("three-maki")) {
-			//							copyPlayer.updateNumMaki(3);
-			//						}
-			//						
-			//						if (secondCard.equals("chopsticks")) {
-			//							copyPlayer.incrementNumChopsticks();
-			//						} else if (secondCard.equals("one-maki")) {
-			//							copyPlayer.updateNumMaki(1);
-			//						} else if (secondCard.equals("two-maki")) {
-			//							copyPlayer.updateNumMaki(2);
-			//						} else if (secondCard.equals("three-maki")) {
-			//							copyPlayer.updateNumMaki(3);
-			//						}
-			//						copyPlayer.updateSelectedCards(firstCard);
-			//						copyPlayer.removeSelectedCards(firstCard);
-			//						
-			//						copyPlayer.updateSelectedCards(secondCard);
-			//						copyPlayer.removeSelectedCards(secondCard);
-			//						copyPlayer.moveChopsticksToHand();
-			//						
-			//						//form player array for next iteration
-			//						ArrayList<Player> currChoicePlayers = new ArrayList<Player>();
-			//						for (int p = 0; p < allPlayers.size(); p++) {
-			//							if (p == agentIndex)
-			//								currChoicePlayers.add(copyPlayer);
-			//							else
-			//								currChoicePlayers.add(allPlayers.get(p));
-			//						}
-			//						if (nextAgentIndex == 0)
-			//							currChoicePlayers = rotateHandCards(currChoicePlayers);
-			//						ScoreAction recurseScoreAction = Vmaxmin(currChoicePlayers, nextDepth, nextAgentIndex,
-			//																  alpha, beta);
-			//						ScoreAction currScoreAction = new ScoreAction();
-			//						currScoreAction.actions.add(firstCard);
-			//						currScoreAction.actions.add(secondCard);
-			//						currScoreAction.score = recurseScoreAction.score;
-			//						if (agentIndex == 0) {
-			//							if (recurseScoreAction.score > bestScore) {
-			//								bestScore = recurseScoreAction.score;
-			//								optimalActionScore = currScoreAction;
-			//							}
-			//							if (recurseScoreAction.score > alpha)
-			//								alpha = recurseScoreAction.score;
-			//							if (beta <= alpha)
-			//								break;
-			//							
-			//						} else {
-			//							if (recurseScoreAction.score < worstScore) {
-			//								worstScore = recurseScoreAction.score;
-			//								optimalActionScore = currScoreAction;
-			//							}
-			//							if (recurseScoreAction.score < worstScore) 
-			//								beta = recurseScoreAction.score;
-			//							if (beta <= alpha) 
-			//								break;
-			//						}
-			//					}
-			//				}
-			//				
-			//			}
-
-			//get the optimal ActionScore
-			//			int bestScore = Integer.MIN_VALUE;
-			//			int worstScore = Integer.MAX_VALUE;
-			//			ScoreAction optimalActionScore = null;
-			//			for (int as = 0; as < allActionScores.size(); as++) {
-			//				ScoreAction currActionScore = allActionScores.get(as);
-			//				if (agentIndex == 0 && currActionScore.score > bestScore) {
-			//					bestScore = currActionScore.score;
-			//					optimalActionScore = currActionScore;
-			//				} else if (agentIndex > 0 && currActionScore.score < worstScore) {
-			//					worstScore = currActionScore.score;
-			//					optimalActionScore = currActionScore;
-			//				}
-			//			}
-			//				if (agentIndex == 1 && depth == (INIT_DEPTH))
-			//					System.out.println("min action is: " + optimalActionScore.actions.get(0) + 
-			//							" with value: " + Integer.toString(optimalActionScore.score) + " for depth: " +
-			//							Integer.toString(depth));
-			//			System.out.println("num Vmaxmin so far: " + Integer.toString(globalAlphaBetaCounter));
 			globalAlphaBetaCounter++;
-			//			if (agentIndex == AGENT_ID && optimalActionScore.actions.contains("one-maki")) {
-			//				String changedMakiAction = null;
-			//				if (agent.getCardsInHand().contains("three-maki")) {
-			//					changedMakiAction = "three-maki";
-			//				} else if (agent.getCardsInHand().contains("two-maki"))
-			//					changedMakiAction = "two-maki";
-			//				optimalActionScore.actions.remove("one-maki");
-			//				optimalActionScore.actions.add(changedMakiAction);
-			//			}
-			//			System.out.println("finished checking hand");
 			return optimalActionScore;
 		}
 	}
@@ -732,21 +507,7 @@ public class GamePlay {
 		int AIscore = getScore(ai_cards, AI, copyPlayers, true);
 		int humanScore = getScore(humanPlayer.getSelectedCards(), humanPlayer, copyPlayers, true);
 
-		//		handlePuddingScore(copyPlayers);
-
-		//		System.out.println("AI hand is: " + String.join(",", AI.getSelectedCards()));
-		//		System.out.println("AI score is: " + Integer.toString(AI.getRoundPoints()));
-		//		System.out.println("human hand is: " + String.join(",", humanPlayer.getSelectedCards()));
-		//		System.out.println("human score is: " + Integer.toString(humanScore));
-		//		handlePuddingScore(copyPlayers);
-
-		//		System.out.println("AI hand is: " + String.join(",", AI.getSelectedCards()));
-		//		System.out.println("AI score is: " + Integer.toString(AIscore));
-		//		System.out.println("human hand is: " + String.join(",", humanPlayer.getSelectedCards()));
-		//		System.out.println("human score is: " + Integer.toString(humanScore));
 		assert AI.getSelectedCards().size() == humanPlayer.getSelectedCards().size();
-		//		return AIscore;
-		//		System.out.println("human score: " + Integer.toString(humanScore) + " AI score: " + Integer.toString(AIscore));
 		return AIscore - humanScore;
 	}
 
