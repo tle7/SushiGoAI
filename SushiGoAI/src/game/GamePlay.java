@@ -24,7 +24,7 @@ public class GamePlay {
 	private static final int ONE_MAKI = 6;
 	private static final int SALMON_NIGIRI = 10;
 	private static final int SQUID_NIGIRI = 5;
-	private static final int EGG_NIGIRI = 0;
+	private static final int EGG_NIGIRI = 5;
 	private static final int PUDDING = 10;
 	private static final int WASABI = 6;
 	private static final int CHOPSTICKS = 0;
@@ -42,18 +42,19 @@ public class GamePlay {
 	private static final int WASABI_CARD = 10;
 	private static final int CHOPSTICKS_CARD = 11;
 
-	private static final int NUM_TWO_PLAYER_CARDS = 9;
+	private static final int NUM_TWO_PLAYER_CARDS = 10;
 	//TODO: replicate bug with just squid and salmon and check min scoring
 	//Vmaxmin: make sure setting consistent scoring in with right variable names
 	//	private static final int NUM_TWO_PLAYER_CARDS = 10;
 
 
-	private static final int INIT_DEPTH = 7;
+	private static final int INIT_DEPTH = 10;
 	private static final int AGENT_ID = 0;
 	private static Scanner scanner;
 
 	private static final ArrayList<Integer> deck = new ArrayList<Integer>();
 	private static ArrayList<Player> players = new ArrayList<Player>();
+	private static ArrayList<Integer> humanSimulateHand = new ArrayList<Integer>();
 
 	private static int globalAlphaBetaCounter = 0;
 
@@ -74,20 +75,7 @@ public class GamePlay {
 	//	}
 	//	public static final String[] cardNamesArr = new String[] {"tempura", "sashimi", "dumpling", "two-maki", "three-maki", "one-maki", "salmon-nigiri", "squid-nigiri",
 	//			"egg-nigiri", "pudding", "wasabi", "chopsticks"};
-	//	public static final Set<String> cardNamesSet = new HashSet<>(Arrays.asList(cardNamesArr));
 
-	//	private static final int TEMPURA_CARD = 0;
-	//	private static final int SASHIMI_CARD = 1;
-	//	private static final int DUMPLING_CARD = 2;
-	//	private static final int TWO_MAKI_CARD = 3;
-	//	private static final int THREE_MAKI_CARD = 4;
-	//	private static final int ONE_MAKI_CARD = 5;
-	//	private static final int SALMON_NIGIRI_CARD = 6;
-	//	private static final int SQUID_NIGIRI_CARD = 7;
-	//	private static final int EGG_NIGIRI_CARD = 8;
-	//	private static final int PUDDING_CARD = 9;
-	//	private static final int WASABI_CARD = 10;
-	//	private static final int CHOPSTICKS_CARD = 11;
 	private static void initializeMaps() {
 		constToName = new HashMap<>();
 		constToName.put(TEMPURA_CARD, "tempura");
@@ -207,6 +195,13 @@ public class GamePlay {
 							handleHandUpdates(currPlayer, optActionCard, (numAct == 1));
 						}
 						currPlayer.updateHand(currPlayerHand);
+
+						//handle giving player 2 real hand
+						if (r == 0) {
+							for (int simCardInd = 0; simCardInd < humanSimulateHand.size(); simCardInd++) 
+								deck.add(humanSimulateHand.get(simCardInd));
+							players.get(1).updateHand(getCardHand(NUM_TWO_PLAYER_CARDS));
+						}
 					} else {
 						for (int playerCard = 0; playerCard < numCardSelections; playerCard++) {
 							int currCard = handlePlayerCardSelection(currPlayer, (playerCard == 1) ? true : false);
@@ -214,11 +209,6 @@ public class GamePlay {
 								handleHandUpdates(currPlayer, currCard, (playerCard == 1) ? true : false);
 						}
 					}
-					//					try {
-					//						Thread.sleep(2000);
-					//					} catch (InterruptedException e) {
-					//						e.printStackTrace();
-					//					}
 				}
 
 				if (roundHasEnded) break;
@@ -246,7 +236,7 @@ public class GamePlay {
 			}
 		}
 		System.out.println("Game is over");
-//		handlePuddingScore(players);
+		//		handlePuddingScore(players);
 		for (int i = 0; i < players.size(); i++) {
 			System.out.println("Player " + (i + 1) + "'s final score is: " + Integer.toString(players.get(i).getTotalPoints()));
 		}
@@ -285,42 +275,17 @@ public class GamePlay {
 		Player player1 = new Player();
 		Player player2 = new Player();
 
-		//		players.add(player1);
-		//		players.add(player2);
-		//		ArrayList<String> player1hand = new ArrayList<String>() {{
-		//			add("salmon-nigiri");
-		//			add("salmon-nigiri");
-		//			add("salmon-nigiri");
-		//		}};
-		//		player1.updateHand(player1hand);
-		//		ArrayList<String> player2hand = new ArrayList<String>() {{
-		//			add("salmon-nigiri");
-		//			add("salmon-nigiri");
-		//			add("squid-nigiri");
-		//		}};
-		//		player1.updateHand(player1hand);
-		//		player2.updateHand(player2hand);
 		player1.updateHand(getCardHand(NUM_TWO_PLAYER_CARDS));
 		player2.updateHand(getCardHand(NUM_TWO_PLAYER_CARDS));
 
+		ArrayList<Integer> player2Hand = player2.getHand();
+		for (int i = 0; i < NUM_TWO_PLAYER_CARDS; i++) {
+			humanSimulateHand.add(player2Hand.get(i));
+		}
+
+
 		players.add(player1);
 		players.add(player2);
-
-		//		ArrayList<String> start1 = new ArrayList<String>();
-		//		start1.add("squid-nigiri");
-		//		start1.add("squid-nigiri");
-		//		start1.add("squid-nigiri");
-		//		start1.add("salmon-nigiri");
-		//
-		//		ArrayList<String> start2 = new ArrayList<String>();
-		//		start2.add("salmon-nigiri");
-		//		start2.add("salmon-nigiri");
-		//		start2.add("salmon-nigiri");
-		//		start2.add("egg-nigiri");
-		//
-		//		player1.updateHand(start1);
-		//		player2.updateHand(start2);
-
 	}
 
 	private static ArrayList<Integer> getCardHand (int numCards) {
@@ -334,10 +299,10 @@ public class GamePlay {
 		return currHand;
 	}
 
-//	private static void countScoreInHand(ArrayList<Integer> currHand, Player currPlayer) {
-//		int currScore = getScore(currHand, currPlayer, players); 
-//		currPlayer.setRoundPoints(currScore);
-//	}
+	//	private static void countScoreInHand(ArrayList<Integer> currHand, Player currPlayer) {
+	//		int currScore = getScore(currHand, currPlayer, players); 
+	//		currPlayer.setRoundPoints(currScore);
+	//	}
 
 	private static int calcDumplingScore (int numDumplings) {
 		switch (numDumplings) {
@@ -398,14 +363,14 @@ public class GamePlay {
 				numDumplings++;
 			else if (card == SASHIMI_CARD)
 				numSashimi++;
-//			else if (card == ONE_MAKI_CARD)
-//				numMaki++;
-//			else if (card == TWO_MAKI_CARD)
-//				numMaki += 2;
-//			else if (card == THREE_MAKI_CARD)
-//				numMaki += 3;
-//			else if (card == PUDDING_CARD)
-//				numPudding++;
+			//			else if (card == ONE_MAKI_CARD)
+			//				numMaki++;
+			//			else if (card == TWO_MAKI_CARD)
+			//				numMaki += 2;
+			//			else if (card == THREE_MAKI_CARD)
+			//				numMaki += 3;
+			//			else if (card == PUDDING_CARD)
+			//				numPudding++;
 			else if (card == SALMON_NIGIRI_CARD) {
 				if (numWasabi > 0) {
 					currScore += 6;
@@ -477,7 +442,7 @@ public class GamePlay {
 		//		System.out.println("Maki Score player: " + currPlayer + " " + Integer.toString(score));
 		return score;
 	}
-	
+
 	private static int puddingScore(Player currPlayer, ArrayList<Player> allPlayers) {
 		Player mainPlayer = allPlayers.get(0);
 		Player otherPlayer = allPlayers.get(1);
@@ -486,7 +451,7 @@ public class GamePlay {
 			mainPlayer = otherPlayer;
 			otherPlayer = temp;
 		}
-		
+
 		if (mainPlayer.getNumPuddings() == otherPlayer.getNumPuddings()) {
 			return 3;
 		}
@@ -601,8 +566,6 @@ public class GamePlay {
 						//						System.out.println("action: " + constToName.get(currCard) + "has point value: " + Integer.toString(currScoreAction.score));
 						//						System.out.println("");
 					}
-					//					if (depth == INIT_DEPTH)
-					//						System.out.println("action: " + currCard + "has point value: " + Integer.toString(currScoreAction.score));
 					if (recurseScoreAction.score > bestScore) {
 						bestScore = recurseScoreAction.score;
 						optimalActionScore = currScoreAction;
