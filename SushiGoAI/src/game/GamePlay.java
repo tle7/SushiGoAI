@@ -590,6 +590,7 @@ public class GamePlay {
 			for (int s = 0; s < possibleActions.size(); s++) {
 				int currCard = possibleActions.get(s);
 				if (seenActions.contains(currCard)) {
+					System.out.println("this action was skipped: " + constToName.get(currCard));
 					continue;
 				}
 				seenActions.add(currCard);
